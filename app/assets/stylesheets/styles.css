@@ -172,7 +172,7 @@ footer {
 
 @media(max-width:768px){
   .navbar-brand img{
-    content:url(../assets/img/minimized-logo.png);
+    content:url("/assets/images/minimized-logo.png");
     height:50px;
     /*filter: invert(100%);*/
   }
@@ -209,7 +209,7 @@ footer {
     	text-align:left;
     	outline:none;
     	font-size:18px;
-    	background:url(../assets/img/register/person.png) no-repeat 440px 10px;
+    	/*background:url(../assets/img/register/person.png) no-repeat 440px 10px;*/
     	margin-top:4%;
     	font-weight: 300;
     	font-family: 'Muli', sans-serif;
@@ -224,7 +224,7 @@ footer {
     	text-align:left;
     	outline:none;
     	font-size:18px;
-    	background:url(../assets/img/register/lock.png) no-repeat 440px 10px;
+    	/*background:url(../assets/img/register/lock.png) no-repeat 440px 10px;*/
     	margin-top:2%;
     	border-radius: 4px;
     }

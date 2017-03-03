@@ -17,24 +17,17 @@
 
     <meta name="description" content="ZAStream is a brand new company for broadcasters and viwers online live video streaming website " />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/ionicons.min.css")">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/animate.min.css")">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/nav.css")">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/styles.css")">
-
-    <script src="assets/javascripts/jquery.min.js"></script>
-    <script src="assets/javascripts/bootstrap.min.js"></script>
-    <script src="assets/javascripts/jquery.easing.min.js"></script>
-    <script src="assets/javascripts/wow.js"></script>
-    <script src="assets/javascripts/scripts.js"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")"/>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/animate.min.css")"/>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/ionicons.min.css")"/>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/styles.css")"/>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/nav.css")"/>
 
     <link rel="shortcut icon" href="assets/images/registerPage/logo.png" type="image/png">
 
     </head>
     <body>
-        <nav id="topNav" class="navbar navbar-default navbar-fixed-top">
+        <nav id="topNav" class="navbar navbar-default navbar-fixed-top affix-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar">
@@ -43,7 +36,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand page-scroll" href="/"><img src="assets/images/index/logo.png" alt="icon" ></a>
+                    <a class="navbar-brand page-scroll" href="@routes.HomeController.index()"><img src="assets/images/index/logo.png" alt="icon" ></a>
                 </div>
                 <div class="navbar-collapse collapse" id="bs-navbar">
                     <ul class="nav navbar-nav navbar-right">
@@ -71,31 +64,34 @@
             </div>
         </footer>
 
-        <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h2 class="text-center">ZAStream - Sign In</h2>
+        @*<div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">*@
+            @*<div class="modal-dialog">*@
+                @*<div class="modal-content">*@
+                    @*<div class="modal-body">*@
+                        @*<h2 class="text-center">ZAStream - Sign In</h2>*@
+                        @*<div class="content1">*@
+                            @*<form>*@
+                                @*<input type="text" name="userid" value="username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}">*@
+                                @*<input type="password" name="psw" value="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">*@
+                                @*<div class="button-row">*@
+                                    @*<input type="submit" class="sign-in" value="Sign In">*@
+                                    @*<div class="clear"></div>*@
+                                @*</div>*@
+                            @*</form>*@
+                        @*</div>*@
+                        @*<p class="text-center"><a href="">Forgot Password?</a></p>*@
+                        @*<p class="text-center"><a href="register">Need an Account? Click Here!</a></p>*@
+                        @*<br/>*@
+                            @*<!-- <button class="btn btn-primary btn-lg center-block" data-dismiss="modal" aria-hidden="true"> OK </button> -->*@
+                    @*</div>*@
+                @*</div>*@
+            @*</div>*@
+        @*</div>*@
 
-                        <div class="content1">
-                            <form>
-                                <input type="text" name="userid" value="username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}">
-                                <input type="password" name="psw" value="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">
-                                <div class="button-row">
-                                    <input type="submit" class="sign-in" value="Sign In">
-                                    <div class="clear"></div>
-                                </div>
-                            </form>
-                        </div>
-                        <p class="text-center"><a href="">Forgot Password?</a></p>
-                        <p class="text-center"><a href="register">Need an Account? Click Here!</a></p>
-                        <br/>
-                            <!-- <button class="btn btn-primary btn-lg center-block" data-dismiss="modal" aria-hidden="true"> OK </button> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
+        <script src="assets/javascripts/jquery.min.js"></script>
+        <script src="assets/javascripts/bootstrap.min.js"></script>
+        <script src="assets/javascripts/jquery.easing.min.js"></script>
+        <script src="assets/javascripts/wow.js"></script>
+        <script src="assets/javascripts/scripts.js"></script>
     </body>
 </html>

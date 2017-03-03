@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Channel;
 import models.User;
 import play.Logger;
 import play.data.DynamicForm;
@@ -13,8 +14,8 @@ import play.mvc.Result;
 import views.html.*;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 
-import static play.mvc.Controller.flash;
 import static play.mvc.Controller.session;
 import static play.mvc.Http.Context.Implicit.ctx;
 import static play.mvc.Results.badRequest;
@@ -36,15 +37,19 @@ public class AuthenticationController {
     public Result newUser(){
         DynamicForm dynForm = Form.form().bindFromRequest();
         registerForm = formFactory.form(RegisterForm.class);
-        User newUser = new User();
-        newUser.setUserName(dynForm.get("userName"));
-        newUser.setPassWord(dynForm.get("passWord"));
-        newUser.setEmail(dynForm.get("email"));
+        User newUser = new User(dynForm.get("userName"), dynForm.get("passWord"),dynForm.get("email") );
 
         List<ValidationError> errors = newUser.validate();
         if(errors == null){
+            Channel newChannel = new Channel("PUB", randomStreamKey(), null, newUser);
+
+
             newUser.save();
+            newChannel.save();
+
             Logger.debug("Successful New User:" + newUser.getUserName());
+            Logger.debug("Successful New Channel: "+newChannel.getStreamKey());
+
         }else{
             Logger.debug("Unsucessful New User: "+ newUser.getUserName());
             Logger.debug("Errors: "+errors.toString());
@@ -58,6 +63,18 @@ public class AuthenticationController {
         }
 
         return redirect(controllers.routes.HomeController.index());
+    }
+
+
+    public String randomStreamKey(){
+        String key;
+        do{
+            key = UUID.randomUUID().toString();
+            key = key.replaceAll("-","");
+            key = key.substring(0,16);
+        }while(Channel.streamKeyExists(key)); //prevent duplicates
+
+        return key;
     }
 
 
