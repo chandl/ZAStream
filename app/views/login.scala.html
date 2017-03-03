@@ -1,0 +1,52 @@
+@(title: String,
+        loginForm: Form[views.formdata.LoginForm],isLoggedIn: Boolean, userInfo: User)
+
+@import assets.constant.Constants
+
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page.
+*@
+@main(title, isLoggedIn, userInfo) {
+        <script type="application/x-javascript">
+                addEventListener("load", function() {
+                    setTimeout(hideURLbar, 0);
+                }, false);
+
+                function hideURLbar() {
+                    window.scrollTo(0, 1);
+                }
+        </script>
+
+
+
+        <link rel='stylesheet' type='text/css' href='/assets/stylesheets/nav.css'>
+        <link rel='stylesheet' type='text/css' href='/assets/stylesheets/bootstrap.min.css'>
+        <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
+        <link rel="icon" href="assets/images/registerPage/logo.png" type="image/png">
+
+
+        <div class="log">
+            <div class="content2">
+                <h2>Login</h2>
+                @if(loginForm.hasErrors) {
+                    @for(error <- loginForm.errors()){
+                        <p class="errormsg">@error</p>
+                    }
+                }
+                <form method="post" action="@routes.AuthenticationController.authenticate()">
+                    <input type="text" name="userName" value="@Constants.USERNAME_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.USERNAME_PLACEHOLDER';}">
+                    <input type="password" name="passWord" value="@Constants.PASSWORD_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {tis.value = '@Constants.PASSWORD_PLACEHOLDER';}">
+                    <input type="submit" class="register" value="login" />
+                </form>
+            </div>
+
+            <p class="text-center"><a href="">Forgot Password?</a></p>
+            <p class="text-center"><a href="@routes.AuthenticationController.registerPage()">Need an Account? Click Here!</a></p>
+
+            <div class="clear"></div>
+        </div>
+
+
+}

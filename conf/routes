@@ -1,0 +1,26 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                              controllers.HomeController.index
+
+GET     /public/stylesheets/nav.css                     controllers.Assets.at(path="/public/stylesheets", file="nav.css")
+GET     /public/stylesheets/bootstrap.min.css           controllers.Assets.at(path="/public/stylesheets", file="bootstrap.min.css")
+GET     /public/stylesheets/Rstyle.css                  controllers.Assets.at(path="/public/stylesheets", file="Rstyle.css")
+
+GET     /index.html           controllers.HomeController.index
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+#GET     /addTestUser            controllers.AuthenticationController.testAddUser
+
+GET     /register               controllers.AuthenticationController.registerPage
+POST    /register               controllers.AuthenticationController.newUser
+
+GET     /login                  controllers.AuthenticationController.loginPage
+POST    /login                  controllers.AuthenticationController.authenticate
+
+GET     /logout                 controllers.AuthenticationController.logout
+
+#View Streams
+GET     /:name           controllers.ChannelController.show(name: String)

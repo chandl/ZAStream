@@ -1,0 +1,101 @@
+@*
+ * This template is called from the `index` template. This template
+ * handles the rendering of the page header and body tags. It takes
+ * two arguments, a `String` for the title of the page and an `Html`
+ * object to insert into the body of the page.
+ *@
+@(title: String, isLoggedIn: Boolean, userInfo: User)(content: Html)
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+    <meta charset="utf-8">
+    <title>ZAStream - @title</title>
+
+    <meta name="description" content="ZAStream is a brand new company for broadcasters and viwers online live video streaming website " />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/ionicons.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/animate.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/nav.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/styles.css")">
+
+    <script src="assets/javascripts/jquery.min.js"></script>
+    <script src="assets/javascripts/bootstrap.min.js"></script>
+    <script src="assets/javascripts/jquery.easing.min.js"></script>
+    <script src="assets/javascripts/wow.js"></script>
+    <script src="assets/javascripts/scripts.js"></script>
+
+    <link rel="shortcut icon" href="assets/images/registerPage/logo.png" type="image/png">
+
+    </head>
+    <body>
+        <nav id="topNav" class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand page-scroll" href="/"><img src="assets/images/index/logo.png" alt="icon" ></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-navbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            @*<a class="page-scroll" data-toggle="modal" title="Sign in or Register" href="#loginModal">Sign In / Sign Up</a>*@
+                            @if(isLoggedIn){
+                                <a class="page-scroll" title="Logged in" href="@routes.AuthenticationController.logout()">Hi, @userInfo.getUserName(). Logout</a>
+                            }else{
+                                <a class="page-scroll" title="Sign in or Register" href="@routes.AuthenticationController.loginPage()">Sign In / Sign Up</a>
+                            }
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        @* And here's where we render the `Html` object containing
+         * the page content. *@
+        @content
+
+        <footer id="footer">
+            <div class="container-fluid">
+                <br/>
+                <span class="pull-right text-muted footer-text"><a href="http://zastream.com">Copyright ZAStream</a> &copy; 2017</span>
+            </div>
+        </footer>
+
+        <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h2 class="text-center">ZAStream - Sign In</h2>
+
+                        <div class="content1">
+                            <form>
+                                <input type="text" name="userid" value="username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}">
+                                <input type="password" name="psw" value="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">
+                                <div class="button-row">
+                                    <input type="submit" class="sign-in" value="Sign In">
+                                    <div class="clear"></div>
+                                </div>
+                            </form>
+                        </div>
+                        <p class="text-center"><a href="">Forgot Password?</a></p>
+                        <p class="text-center"><a href="register">Need an Account? Click Here!</a></p>
+                        <br/>
+                            <!-- <button class="btn btn-primary btn-lg center-block" data-dismiss="modal" aria-hidden="true"> OK </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+</html>

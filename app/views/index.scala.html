@@ -1,0 +1,133 @@
+@(isLoggedIn: Boolean, userInfo: User)
+
+@main("Home", isLoggedIn, userInfo) {
+        <header id="first">
+            <div class="header-content">
+                <div class="inner">
+                    <br/>
+                    <h1 class="cursive">Welcome to ZAStream</h1>
+
+                    <hr>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas suscipit faucibus scelerisque. Suspendisse posuere risus ut finibus placerat. Nunc ornare vitae ex eget mollis. Sed rhoncus tempus mollis.</p>
+
+                </div>
+            </div>
+            <video autoplay="" loop="" class="fillWidth fadeIn wow collapse in" data-wow-delay="0.5s" poster="assets/video/Highlights.jpg" id="video-background">
+                <source src="assets/video/Highlights.mp4" type="video/mp4">Your browser does not support the video tag. I suggest you upgrade your browser.
+                <source src="assets/video/Highlights.webm" type="video/webm">Your browser does not support the video tag. I suggest you upgrade your browser.
+            </video>
+        </header>
+        <section class="bg-primary" id="one">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
+                        <h2 class="margin-top-0 text-primary">Video Streaming</h2>
+                        <br>
+                        <p class="text-faded">
+                            <strong>Streaming</strong> media is multimedia that is constantly received by and presented to an end-user while being delivered by a provider. The verb "to stream" refers to the process of delivering or obtaining media in this manner; the term refers to the delivery method of the medium, rather than the medium itself, and is an alternative to file downloading, a process in which the end-user obtains the entire file for the content before watching or listening to it.
+                        </p>
+                        <a href="#three" class="btn btn-default btn-xl page-scroll">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="two" class="no-padding">
+            <div class="container-fluid">
+                <h2 class="text-center text-primary">Featured Live Streams</h2>
+                <br/>
+                <hr class="primary">
+                <br/>
+                <div class="row no-gutter">
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="gallery-box" href="#">
+                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream1">
+                            <div class="gallery-box-caption">
+                                <div class="gallery-box-content">
+                                    <div>
+                                        <h2>A Streaming Live!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="gallery-box" href="#">
+                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream2">
+                            <div class="gallery-box-caption">
+                                <div class="gallery-box-content">
+                                    <div>
+                                        <h2>B Streaming Live!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="gallery-box" href="#">
+                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream3">
+                            <div class="gallery-box-caption">
+                                <div class="gallery-box-content">
+                                    <div>
+                                        <h2>C Streaming Live!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="gallery-box" href="#">
+                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream4">
+                            <div class="gallery-box-caption">
+                                <div class="gallery-box-content">
+                                    <div>
+                                        <h2>D Streaming Live!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="gallery-box" href="#">
+                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream5">
+                            <div class="gallery-box-caption">
+                                <div class="gallery-box-content">
+                                    <div>
+                                        <h2>E Streaming Live!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="gallery-box" href="#">
+                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream6">
+                            <div class="gallery-box-caption">
+                                <div class="gallery-box-content">
+                                    <div>
+                                        <h2>F Streaming Live!</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <aside class="bg-dark">
+            <div class="container text-center">
+                <div class="call-to-action">
+                    <h2 class="text-primary">Get Started!</h2>
+                    <a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Broadcaster</a>
+                    <a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>
+                </div>
+                <br>
+                <hr/>
+                <br>
+
+            </div>
+        </aside>
+
+}
