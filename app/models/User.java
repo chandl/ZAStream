@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 import controllers.Secured;
+import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import javax.persistence.*;
@@ -40,21 +41,45 @@ public class User extends Model{
     @OneToOne(mappedBy = "owner", targetEntity = Channel.class)
     public Channel userChannel;
 
+    public User(String userName, String passWord, String email) {
+        this.userName = userName;
+        this.passWord = passWord;
+        this.email = email;
+    }
+
     public static Finder find = new Finder(Integer.class, User.class);
 
-        public List<ValidationError> validate(){
-            List<ValidationError> errors = new ArrayList<ValidationError>();
+    public List<ValidationError> validate(){
+        List<ValidationError> errors = new ArrayList<ValidationError>();
 
-            if(Secured.emailExists(email)){
-                errors.add(new ValidationError("email", "Sorry, this e-mail is already registered."));
-            }
-
-            if(Secured.isUser(userName)){
-                errors.add(new ValidationError("userName", "Sorry, this username is already registered."));
-            }
-
-            return errors.isEmpty()? null : errors;
+        if(Secured.emailExists(email)){
+            errors.add(new ValidationError("email", "Sorry, this e-mail is already registered."));
         }
+
+        if(Secured.isUser(userName)){
+            errors.add(new ValidationError("userName", "Sorry, this username is already registered."));
+        }
+
+        return errors.isEmpty()? null : errors;
+    }
+
+    public static User findByUsername(String userName){
+        List<User> users = find.where().eq("userName", userName).findList();
+        return (users.size() == 0)? null:users.get(0);
+    }
+
+    public Channel findChannel(){
+        List<Channel> theChannel = Channel.find.where().eq("userID", this.userId).findList();
+
+        if(theChannel.size() == 0) {
+            Logger.debug("No Channel Found for ID: "+userId + ", Name: "+userName);
+            return null;
+        }else{
+            Logger.debug("Channel Found for ID: "+userId + ", Name: "+userName+", Key: "+theChannel.get(0).getStreamKey());
+            return theChannel.get(0);
+        }
+    }
+
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Channel;
 import models.User;
 import play.Logger;
 import play.mvc.Http;
@@ -63,7 +64,7 @@ public class Secured extends Security.Authenticator {
     }
 
     public static boolean checkPassword(String userName, String passWord){
-        Logger.debug(String.format("In checkPassword. Username: %s, Password: %s", userName, passWord));
+//        Logger.debug(String.format("In checkPassword. Username: %s, Password: %s", userName, passWord));
 
         List<User> user = User.find.where().eq("userName", userName).where().eq("passWord", passWord).findList();
 
