@@ -5,6 +5,7 @@ import models.User;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.validation.ValidationError;
+import play.mvc.Controller;
 import play.mvc.Security;
 import views.formdata.LoginForm;
 import views.formdata.RegisterForm;
@@ -22,7 +23,7 @@ import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
 
-public class AuthenticationController {
+public class AuthenticationController extends Controller {
 
     @Inject FormFactory formFactory;
 

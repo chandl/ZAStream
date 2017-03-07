@@ -3,11 +3,12 @@ package controllers;
 import models.Channel;
 import models.User;
 import play.Logger;
+import play.mvc.Controller;
 import play.mvc.Result;
 
 import static play.mvc.Results.ok;
 
-public class StreamController {
+public class StreamController extends Controller{
 
 //doesn't work with nginx, V2
     public Result stream(String name){
