@@ -1,5 +1,6 @@
-package controllers;
+package helper;
 
+import controllers.routes;
 import models.Channel;
 import models.User;
 import play.Logger;
@@ -11,9 +12,6 @@ import java.util.List;
 
 import static play.mvc.Controller.session;
 
-/**
- * Created by chandler on 2/28/17.
- */
 public class Secured extends Security.Authenticator {
 
     @Override
@@ -23,7 +21,7 @@ public class Secured extends Security.Authenticator {
 
     @Override
     public Result onUnauthorized(Http.Context ctx) {
-        return redirect(routes.HomeController.index());
+        return redirect(controllers.routes.HomeController.index());
     }
 
     public static String getEmail(Http.Context ctx){
@@ -66,10 +64,9 @@ public class Secured extends Security.Authenticator {
     public static boolean checkPassword(String userName, String passWord){
 //        Logger.debug(String.format("In checkPassword. Username: %s, Password: %s", userName, passWord));
 
-        List<User> user = User.find.where().eq("userName", userName).where().eq("passWord", passWord).findList();
+        User user = User.findByUsername(userName);
 
-        Logger.debug("Success: "+ (user.size() > 0));
-        return user.size() > 0;
+        return HashHelper.checkPassword(passWord, user.getPassWord());
     }
 
 

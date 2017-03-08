@@ -1,5 +1,6 @@
 package controllers;
 
+import helper.Secured;
 import models.Channel;
 import models.User;
 import play.Logger;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static play.mvc.Controller.session;
-import static play.mvc.Http.Context.Implicit.ctx;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;

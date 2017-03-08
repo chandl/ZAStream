@@ -1,5 +1,6 @@
 package controllers;
 
+import helper.Secured;
 import play.mvc.*;
 import views.html.*;
 
@@ -17,8 +18,6 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-//        DatabaseController dbc = new DatabaseController();
-
         return ok(index.render(Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 

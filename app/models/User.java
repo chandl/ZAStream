@@ -1,7 +1,8 @@
 package models;
 
 import com.avaje.ebean.Model;
-import controllers.Secured;
+import helper.HashHelper;
+import helper.Secured;
 import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
@@ -43,7 +44,7 @@ public class User extends Model{
 
     public User(String userName, String passWord, String email) {
         this.userName = userName;
-        this.passWord = passWord;
+        this.passWord = HashHelper.createPassword(passWord);
         this.email = email;
     }
 

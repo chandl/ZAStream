@@ -1,12 +1,11 @@
 package controllers;
 
+import helper.Secured;
 import models.Channel;
 import models.User;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
 
-import static play.mvc.Http.Context.Implicit.ctx;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 
