@@ -12,7 +12,6 @@ GET     /public/stylesheets/Rstyle.css                  controllers.Assets.at(pa
 GET     /index.html           controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-#GET     /addTestUser            controllers.AuthenticationController.testAddUser
 
 GET     /register               controllers.AuthenticationController.registerPage
 POST    /register               controllers.AuthenticationController.newUser

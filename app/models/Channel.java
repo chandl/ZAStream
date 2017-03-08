@@ -1,11 +1,20 @@
 package models;
 
 import com.avaje.ebean.Model;
+import play.Logger;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+/**
+ * Channel: Data Model + Helper Methods for Channels
+ *
+ * @author Chandler Severson <seversonc@sou.edu>
+ * @author Yiwei Zheng <zhengy1@sou.edu>
+ * @version 1.0
+ * @since 1.0
+ */
 @Entity
 @Table(name="channel")
 public class Channel extends Model{
@@ -36,7 +45,14 @@ public class Channel extends Model{
     @JoinColumn(name="userID")
     public User owner;
 
-
+    /**
+     * Create a new Channel
+     *
+     * @param channelType The Type of the {@link Channel} (PUB or PRI)
+     * @param streamKey The Stream key to be associated with the {@link Channel}.
+     * @param chatRoom The {@link ChatRoom} to be associated with the {@link Channel}
+     * @param owner The {@link User} that owns this channel.
+     */
     public Channel(String channelType, String streamKey, ChatRoom chatRoom, User owner) {
         this.channelType = channelType;
         this.streamKey = streamKey;
@@ -46,14 +62,24 @@ public class Channel extends Model{
         this.totalViews = 0;
     }
 
+    /**
+     * The {@link com.avaje.ebean.Model.Finder} method to find entries in the DB.
+     */
     public static Finder find = new Finder(Integer.class, Channel.class);
 
+    /**
+     * Checks if a specified Stream key exists.
+     * @param key The stream key to check.
+     * @return true if the stream key exists, otherwise return false
+     */
     public static boolean streamKeyExists(String key){
         List<Channel> channels = find.where().eq("streamKey", key).findList();
 
         return channels.size() > 0;
     }
 
+
+    //====================Getters and Setters====================
     public int getChannelID() {
         return channelID;
     }
@@ -109,21 +135,35 @@ public class Channel extends Model{
     public void setOwner(User owner) {
         this.owner = owner;
     }
-
-    public static Finder getFind() {
-        return find;
-    }
-
-    public static void setFind(Finder find) {
-        Channel.find = find;
-    }
+    //====================END Getters and Setters====================
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Channel: ").append(channelID).append("\n  Viewers: ").append(currentViewers).append("\n  Type: ").append(channelType).append("\n  Key: ").append(streamKey).append("\n  Owner: ").append(owner.toString());
+        sb.append("Channel: ")
+                .append(channelID)
+                .append("\n  Viewers: ")
+                .append(currentViewers)
+                .append("\n  Type: ")
+                .append(channelType)
+                .append("\n  Key: ")
+                .append(streamKey)
+                .append("\n  Owner: ")
+                .append(owner.toString());
 
         return sb.toString();
+    }
+
+    public static Channel findChannel(User user){
+        List<Channel> theChannel = find.where().eq("userID", user.userId).findList();
+
+        if(theChannel.size() == 0) {
+            Logger.debug("No Channel Found for ID: "+ user.userId + ", Name: "+ user.userName);
+            return null;
+        }else{
+            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
+            return theChannel.get(0);
+        }
     }
 }
