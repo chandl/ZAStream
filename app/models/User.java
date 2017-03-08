@@ -2,15 +2,20 @@ package models;
 
 import com.avaje.ebean.Model;
 import helper.HashHelper;
-import helper.Secured;
-import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * User: Data Model + Helper Methods for Users
+ *
+ * @author Chandler Severson <seversonc@sou.edu>
+ * @author Yiwei Zheng <zhengy1@sou.edu>
+ * @version 1.0
+ * @since 1.0
+ */
 @Entity
 @Table(name="user")
 public class User extends Model{
@@ -36,49 +41,127 @@ public class User extends Model{
     @Column(name="email")
     public String email;
 
+    /**
+     * The One-to-Many relationship between the {@link User} and their {@link Chat} messages.
+     */
     @OneToMany(mappedBy = "sender", targetEntity = Chat.class)
     private List<Chat> chatMessages = new ArrayList<Chat>();
 
+    /**
+     * The One-To-One relationship between the {@link User} and their {@link Channel}
+     */
     @OneToOne(mappedBy = "owner", targetEntity = Channel.class)
     public Channel userChannel;
 
+    /**
+     * Create a new User.
+     *
+     * @param userName the user's identifier.
+     * @param passWord the user's password.
+     * @param email the user's email.
+     */
     public User(String userName, String passWord, String email) {
         this.userName = userName;
         this.passWord = HashHelper.createPassword(passWord);
         this.email = email;
     }
 
+    /**
+     * The {@link com.avaje.ebean.Model.Finder} method to find entries in the DB.
+     */
     public static Finder find = new Finder(Integer.class, User.class);
 
+    /**
+     * Checks if a userName is in the DB.
+     *
+     * @param name the userName to check.
+     * @return <code>true</code> if the userName is found in the database.
+     */
+    public static boolean isUser(String name){
+        return findByUsername(name) != null;
+    }
+
+    /**
+     * Checks if a email is in the DB
+     *
+     * @param mail the email to check.
+     * @return <code>true</code> if the email is found in the database.
+     */
+    public static boolean emailExists(String mail){
+        return findByEmail(mail) != null;
+    }
+
+    /**
+     * Validation method to check if a user entered the correct password while logging in.
+     *
+     * <p>
+     *     Uses {@link HashHelper} to securely check the password vs. encrypted password hashes.
+     * </p>
+     *
+     * @param userName The username.
+     * @param passWord The password.
+     * @return <code>true</code> if the password matches what is in the DB.
+     */
+    public static boolean checkPassword(String userName, String passWord){
+        User user = findByUsername(userName);
+        return HashHelper.checkPassword(passWord, user.getPassWord());
+    }
+
+    /**
+     * Verifies that a {@link User} with the specified parameters is valid.
+     *
+     * @param userName The username to check.
+     * @param password The password to check.
+     * @return <code>true</code> if the account&password is valid, <code>false</code> otherwise.
+     */
+    public static boolean isValid(String userName, String password){
+
+        return (userName != null && password != null) && isUser(userName) && checkPassword(userName, password);
+    }
+
+    /**
+     * Helper method to validate email and password entries in registration.
+     *
+     * <p>
+     *     Checks the database to make sure the specified email and password have not been previously used.
+     * </p>
+     *
+     * @return <code>null</code> if there are no errors, {@link List<ValidationError>} of errors otherwise.
+     */
     public List<ValidationError> validate(){
         List<ValidationError> errors = new ArrayList<ValidationError>();
 
-        if(Secured.emailExists(email)){
+        if(emailExists(email)){
             errors.add(new ValidationError("email", "Sorry, this e-mail is already registered."));
         }
 
-        if(Secured.isUser(userName)){
+        if(isUser(userName)){
             errors.add(new ValidationError("userName", "Sorry, this username is already registered."));
         }
 
         return errors.isEmpty()? null : errors;
     }
 
+    /**
+     * Finds a {@link User} in the databse by their userName.
+     *
+     * @param userName The userName of the desired {@link User}
+     * @return <code>null</code> if the userName is not found in the database, otherwise return the matching {@link User}.
+     */
     public static User findByUsername(String userName){
         List<User> users = find.where().eq("userName", userName).findList();
         return (users.size() == 0)? null:users.get(0);
     }
 
-    public Channel findChannel(){
-        List<Channel> theChannel = Channel.find.where().eq("userID", this.userId).findList();
-
-        if(theChannel.size() == 0) {
-            Logger.debug("No Channel Found for ID: "+userId + ", Name: "+userName);
-            return null;
-        }else{
-            Logger.debug("Channel Found for ID: "+userId + ", Name: "+userName+", Key: "+theChannel.get(0).getStreamKey());
-            return theChannel.get(0);
-        }
+    /**
+     * Finds a {@link User} in the database by their email.
+     *
+     * @param email The email of the desired {@link User}
+     * @return <code>null</code> if the email is not found in the database, otherwise return the matching {@link User}.
+     */
+    public static User findByEmail(String email){
+        List<User> users = find.where().eq("email",email).findList();
+        return(users.size() == 0)? null:users.get(0);
     }
 
 
@@ -95,6 +178,7 @@ public class User extends Model{
         return sb.toString();
     }
 
+    //====================Getters and Setters====================
     public int getUserId() {
         return userId;
     }
@@ -142,12 +226,5 @@ public class User extends Model{
     public void setUserChannel(Channel userChannel) {
         this.userChannel = userChannel;
     }
-
-    public static Finder getFind() {
-        return find;
-    }
-
-    public static void setFind(Finder find) {
-        User.find = find;
-    }
+    //====================END Getters and Setters====================
 }
