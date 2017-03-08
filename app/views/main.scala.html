@@ -1,9 +1,4 @@
-@*
- * This template is called from the `index` template. This template
- * handles the rendering of the page header and body tags. It takes
- * two arguments, a `String` for the title of the page and an `Html`
- * object to insert into the body of the page.
- *@
+@* This is the header and footer page for all other html pages *@
 @(title: String, isLoggedIn: Boolean, userInfo: User)(content: Html)
 
 
@@ -41,7 +36,6 @@
                 <div class="navbar-collapse collapse" id="bs-navbar">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            @*<a class="page-scroll" data-toggle="modal" title="Sign in or Register" href="#loginModal">Sign In / Sign Up</a>*@
                             @if(isLoggedIn){
                                 <a class="page-scroll" title="Logged in" href="@routes.AuthenticationController.logout()">Hi, @userInfo.getUserName(). Logout</a>
                             }else{
@@ -64,29 +58,6 @@
             </div>
         </footer>
 
-        @*<div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">*@
-            @*<div class="modal-dialog">*@
-                @*<div class="modal-content">*@
-                    @*<div class="modal-body">*@
-                        @*<h2 class="text-center">ZAStream - Sign In</h2>*@
-                        @*<div class="content1">*@
-                            @*<form>*@
-                                @*<input type="text" name="userid" value="username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}">*@
-                                @*<input type="password" name="psw" value="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">*@
-                                @*<div class="button-row">*@
-                                    @*<input type="submit" class="sign-in" value="Sign In">*@
-                                    @*<div class="clear"></div>*@
-                                @*</div>*@
-                            @*</form>*@
-                        @*</div>*@
-                        @*<p class="text-center"><a href="">Forgot Password?</a></p>*@
-                        @*<p class="text-center"><a href="register">Need an Account? Click Here!</a></p>*@
-                        @*<br/>*@
-                            @*<!-- <button class="btn btn-primary btn-lg center-block" data-dismiss="modal" aria-hidden="true"> OK </button> -->*@
-                    @*</div>*@
-                @*</div>*@
-            @*</div>*@
-        @*</div>*@
 
         <script src="assets/javascripts/jquery.min.js"></script>
         <script src="assets/javascripts/bootstrap.min.js"></script>
