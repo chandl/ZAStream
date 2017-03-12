@@ -10,24 +10,20 @@
 * argument is an `Html` object containing the body of the page.
 *@
 @main(title, isLoggedIn, userInfo) {
-        <script type="application/x-javascript">
-                addEventListener("load", function() {
-                    setTimeout(hideURLbar, 0);
-                }, false);
 
-                function hideURLbar() {
-                    window.scrollTo(0, 1);
-                }
-        </script>
 
         <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
 
         <div class="log">
             <div class="content2">
-                <h2>Login</h2>
+                <h3>ZAStream - Sign In</h3>
                 @if(loginForm.hasErrors) {
-                    @for(error <- loginForm.errors()){
-                        <p class="errormsg">@error</p>
+                    @if(loginForm.error("passWord")!=null ){
+                        <p class="errormsg">Please check your Password!</p>
+                    }
+
+                    @if(loginForm.error("userName")!=null){
+                        <p class="errormsg">Please check your Username!</p>
                     }
                 }
                 <form method="post" action="@routes.AuthenticationController.authenticate()">

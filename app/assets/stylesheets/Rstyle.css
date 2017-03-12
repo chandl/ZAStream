@@ -12,6 +12,12 @@ body {
 	font-family: 'Muli', sans-serif;
 }
 
+.errormsg{
+	font-size: small;
+	font-family: monospace;
+	background-color: rgba(255,40,40,0.8);
+}
+
 .navbar {
 	min-height: 95px !important;
 	background-color: rgba(255,255,255,.8);

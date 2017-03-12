@@ -26,14 +26,19 @@ body {
     color: #222;
     text-align:center;
     }
-.after-box {
-    position: absolute;
-    clear:left;
-    margin-left: 35%;
-    border: 3px solid red;
-    text-align: center;
+
+.view-stats{
+    margin: 0 auto;
+    width: inherit;
     background-size: auto;
+    display: inline;
+    text-align: center;
 }
+.view-stats span{
+    margin-right: 20px;
+}
+
+
 
 section.one{
     text-align:center;
@@ -107,3 +112,6 @@ a {
     color:#c0392b;
     transition: all 0.5s ease-in-out;
 }
+
+
+

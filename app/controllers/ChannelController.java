@@ -3,8 +3,11 @@ package controllers;
 import helper.Secured;
 import models.Channel;
 import models.User;
+import play.Logger;
 import play.mvc.Controller;
+import play.mvc.LegacyWebSocket;
 import play.mvc.Result;
+import play.mvc.WebSocket;
 
 
 /**
@@ -31,9 +34,28 @@ public class ChannelController extends Controller {
 
         User u = User.findByUsername(name);
         Channel c= Channel.findChannel(u);
+
+        c.setTotalViews(c.getTotalViews() + 1);
+        c.save();
+        int totalViews = c.getTotalViews();
         String key = c.getStreamKey();
 
-        return ok(views.html.channel.render(name+"'s Channel", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), key));
+        return ok(views.html.channel.render(name, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), key, totalViews));
+    }
+
+    public Result wsVC(String stream){
+        return ok(views.js.viewCount.render(stream));
+    }
+
+    public LegacyWebSocket<String> viewCountInterface(String channel){
+
+        Logger.info("viewCountInterface Called. Channel: "+channel);
+        return new LegacyWebSocket<String>() {
+            @Override
+            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
+                ViewCount.start(in,out, Channel.findChannel(User.findByUsername(channel)));
+            }
+        };
     }
 
 }
