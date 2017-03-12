@@ -5,62 +5,12 @@ section.main-body{
   margin-top: 7%;
 }
 
-.sidenav {
-    height: 100%; /* 100% Full-height */
-    width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0;
-    right: 0;
-    margin-top:95px;
-    background-color: #111; /* Black*/
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
-}
-
-/* The navigation menu links */
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.6s
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
-}
-
-/* Position and style the close button (top right corner) */
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 20px;
-    font-size: 18;
-    margin-left: 20;
-}
 
 /*Remove navbar background*/
 .navbar-default.affix {
     background-color: rgba(255,255,255,0.2);
 }
 
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-}
-.sideicons {
-    right:30;
-    position: fixed;
-    border: 2px solid #73AD21;
-    Font-size:25px;
-    cursor:e-resize;
-}
 body {
     margin:0;
     padding:0;
@@ -75,7 +25,16 @@ body {
     font:12px arial;
     color: #222;
     text-align:center;
-    padding:35px; }
+    }
+.after-box {
+    position: absolute;
+    clear:left;
+    margin-left: 35%;
+    border: 3px solid red;
+    text-align: center;
+    background-size: auto;
+}
+
 section.one{
     text-align:center;
 }
@@ -89,6 +48,10 @@ form, p, span {
 }
 .navbar {
 	min-height: 95px !important;
+    background-color: rgba(255,255,255,.8);
+}
+li.a.login{
+    color: black;
 }
 
 input { font:12px arial; }
@@ -108,7 +71,7 @@ a {
 
 #loginform { padding-top:18px; }
 
-    #loginform p { margin: 5px; }
+#loginform p { margin: 5px; }
 
 #chatbox {
     text-align:left;
