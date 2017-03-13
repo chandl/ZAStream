@@ -13,11 +13,9 @@ public class ViewCount {
     public static void start(WebSocket.In<String> in, WebSocket.Out<String> out, Channel channel){
         connections.add(out);
 
-
-
         increaseCount(channel);
-        in.onClose(() -> ViewCount.decreaseCount(channel));
 
+        in.onClose(() -> ViewCount.decreaseCount(channel, out));
     }
 
 
@@ -28,9 +26,10 @@ public class ViewCount {
         Logger.info("Someone Connected to " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
     }
 
-    public static void decreaseCount(Channel channel){
+    public static void decreaseCount(Channel channel, WebSocket.Out<String> conn){
         channel.setCurrentViewers(channel.getCurrentViewers() - 1);
         channel.save();
+        connections.remove(conn);
         notifyAll(channel.getCurrentViewers());
         Logger.info("Someone Disconnected from " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
     }
