@@ -10,7 +10,7 @@
                     <h1 class="cursive">Welcome to ZAStream</h1>
 
                     <hr>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas suscipit faucibus scelerisque. Suspendisse posuere risus ut finibus placerat. Nunc ornare vitae ex eget mollis. Sed rhoncus tempus mollis.</p>
+                    <p>We are a new Live Video streaming website built for gamers, teachers, and professionals alike. Our goal is to take the mystery out of live streaming and connect people around the world in collaborative ways.</p>
 
                 </div>
             </div>
@@ -23,17 +23,22 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                        <h2 class="margin-top-0 text-primary">Video Streaming</h2>
+                        <h2 class="margin-top-0 text-primary">About Us</h2>
                         <br>
                         <p class="text-faded">
-                            <strong>Streaming</strong> media is multimedia that is constantly received by and presented to an end-user while being delivered by a provider. The verb "to stream" refers to the process of delivering or obtaining media in this manner; the term refers to the delivery method of the medium, rather than the medium itself, and is an alternative to file downloading, a process in which the end-user obtains the entire file for the content before watching or listening to it.
+                            Thanks for checking us out! We are a brand-new streaming service tailored to small communities, educational groups, and professionals. There are two main things to do here - stream and watch live video! Currently, you can get to public streams only via a link provided by a friend/instructor/presenter, but that will be changing soon! If you want to stream, but you have never streamed before, it is surprisingly easy.
                         </p>
-                        <a href="#three" class="btn btn-default btn-xl page-scroll">Learn More</a>
+                        <hr/>
+                        <p class="text-faded">
+                            ZAStream is a collaborative effort made by undergraduate Computer Science students at Southern Oregon University as a senior-year Capstone project. We really appreciate you testing our website and would love any feedback. Please send any comments, questions, or concerns to support&#64;zastream.com and we will get back to you!
+                        </p>
+                        @*<a href="#three" class="btn btn-default btn-xl page-scroll">Learn More</a>*@
                     </div>
                 </div>
             </div>
         </section>
 
+    <!--
         <section id="two" class="no-padding">
             <div class="container-fluid">
                 <h2 class="text-center text-primary">Featured Live Streams</h2>
@@ -118,12 +123,18 @@
                 </div>
             </div>
         </section>
+        -->
+
         <aside class="bg-dark">
             <div class="container text-center">
                 <div class="call-to-action">
                     <h2 class="text-primary">Get Started!</h2>
-                    <a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Broadcaster</a>
-                    <a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>
+
+                    <p>
+                        Here at ZAStream, we recommend the free Open Broadcaster Software to stream video from your computer, but there are other solutions available. To get started streaming, register by clicking the “Sign Up” link below and follow the instructions provided in the welcome email to set up your streaming client.
+                    </p>
+                    <a href="@routes.AuthenticationController.registerPage()" class="btn btn-default btn-lg wow flipInX">Sign Up</a>
+                    @*<a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>*@
                 </div>
                 <br>
                 <hr/>
@@ -131,5 +142,6 @@
 
             </div>
         </aside>
+
 
 }
