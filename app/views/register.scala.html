@@ -10,31 +10,33 @@
 * argument is an `Html` object containing the body of the page.
 *@
 @main(title, isLoggedIn, userInfo) {
-        <script type="application/x-javascript">
-                addEventListener("load", function() {
-                    setTimeout(hideURLbar, 0);
-                }, false);
-
-                function hideURLbar() {
-                    window.scrollTo(0, 1);
-                }
-        </script>
 
         <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
 
 
         <div class="log">
             <div class="content2">
-                <h2>Sign Up</h2>
+                <h3>ZAStream - Sign Up</h3>
                 @if(registerForm.hasErrors) {
+                    @if(registerForm.error("emailRegistered")!=null){
+                        <p class="errormsg">The email address is already registered! Try another.</p>
+                    }
+                    @if(registerForm.error("emailInvalid")!=null){
+                        <p class="errormsg">The email address is invalid in format!</p>
+                    }
+
+                    @if(registerForm.error("userName")!=null){
+                        <p class="errormsg">This username is already taken! Try another.</p>
+                    }
+                        @*
                         @for(error <- registerForm.errors()){
                             <p class="errormsg">@error</p>
-                        }
+                        }*@
                 }
 
                 <form method="post" action="@routes.AuthenticationController.newUser()">
                     <input type="text" name="userName" value="@Constants.USERNAME_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.USERNAME_PLACEHOLDER';}">
-                    <input type="email" name="email" value="@Constants.EMAIL_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.EMAIL_PLACEHOLDER';}">
+                    <input type="text" name="email" value="@Constants.EMAIL_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.EMAIL_PLACEHOLDER';}">
                     <input type="password" name="passWord" value="@Constants.PASSWORD_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {tis.value = '@Constants.PASSWORD_PLACEHOLDER';}">
                     <input type="submit" class="register" value="register" />
                 </form>

@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * User: Data Model + Helper Methods for Users
  *
@@ -40,6 +43,10 @@ public class User extends Model{
     @Size(max=64)
     @Column(name="email")
     public String email;
+
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     /**
      * The One-to-Many relationship between the {@link User} and their {@link Chat} messages.
@@ -131,8 +138,15 @@ public class User extends Model{
     public List<ValidationError> validate(){
         List<ValidationError> errors = new ArrayList<ValidationError>();
 
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+
+        if(!matcher.matches()){
+            errors.add(new ValidationError("emailInvalid", "Invalid e-mail entered."));
+        }
+
         if(emailExists(email)){
-            errors.add(new ValidationError("email", "Sorry, this e-mail is already registered."));
+            errors.add(new ValidationError("emailRegistered", "Sorry, this e-mail is already registered."));
         }
 
         if(isUser(userName)){
