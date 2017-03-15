@@ -8,12 +8,15 @@
         <script src="//vjs.zencdn.net/5.8/video.min.js"></script>
         <script src="/assets/javascripts/videojs-contrib-hls.min.js"></script>
 
-        <section class="bg-primary" id="one">
+    <script src="/assets/javascripts/videojs-brand.min.js"></script>
+
+
+    <section class="bg-primary" id="one">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
                         <h1 text-align='center'>@stream</h1>
-                        <video id="player" class="video-js vjs-default-skin" height="360" width="640" controls preload="none">
+                        <video id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="none">
                             <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
                         </video>
                         <p class="view-stats">
@@ -55,6 +58,12 @@
 
     <script>
             var player = videojs('#player');
+            player.brand({
+                image: "assets/images/minimized-logo.png",
+                title: "ZAStream",
+                destination: "https://zastream.com",
+                destinationTarget: "_top"
+            });
     </script>
 
 
