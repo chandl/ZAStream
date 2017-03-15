@@ -66,11 +66,12 @@ public class AuthenticationController extends Controller {
             newChannel.save();
 
             Logger.debug("Successful New User:" + newUser.getUserName());
-            Logger.debug("Successful New Channel: "+newChannel.getStreamKey());
+            Logger.debug("New Channel Key: "+newChannel.getStreamKey());
 
             //Sending Email
             MailController mc = new MailController();
-            mc.sendMail("Welcome to ZAStream "+newUser.getUserName()+"!", newUser.getUserName(), newUser.getEmail(), getRegistrationEmail(newUser));
+            mc.sendMail("Welcome to ZAStream, "+newUser.getUserName()+"!", newUser.getUserName(), newUser.getEmail(), getRegistrationEmail(newUser));
+            Logger.debug("Sent Welcome Email to "+newUser.getEmail());
         }else{
             Logger.debug("Unsucessful New User: "+ newUser.getUserName());
             Logger.debug("Errors: "+errors.toString());
@@ -464,7 +465,7 @@ public class AuthenticationController extends Controller {
                 "                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                                  <tbody>\n" +
                 "                                    <tr>\n" +
-                "                                      <td> <a href=\"https://obsproject.com/forum/resources/obs-classic-official-overview-guide.6/\" target=\"_blank\">Open Broadcasting Software</a> </td>\n" +
+                "                                      <td> <a href=\"https://obsproject.com/forum/resources/obs-classic-official-overview-guide.6/\" target=\"_blank\">Open Broadcaster Software</a> </td>\n" +
                 "                                    </tr>\n" +
                 "                                  </tbody>\n" +
                 "                                </table>\n" +
