@@ -12,6 +12,32 @@ body {
 	font-family: 'Muli', sans-serif;
 }
 
+.modal-header{
+	background-color: #282828;
+	color: white;
+	border: 1px solid black;
+    border-radius: 15px;
+}
+.modal-title{
+    font-size: 1.5em;
+}
+.modal-header button{
+	color:white;
+}
+
+.modal-content{
+	background-color: #282828;
+	color: white;
+	padding: 5%;
+	border: 1px solid black;
+}
+.modal{
+    text-align: center;
+    font-weight:700;
+	background-color: rgba(0,0,0, 0.6);
+    padding-top: 10%;
+}
+
 .errormsg{
 	font-size: small;
 	font-family: monospace;

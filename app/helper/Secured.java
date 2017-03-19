@@ -56,6 +56,11 @@ public class Secured extends Security.Authenticator {
         return (getName(ctx) != null);
     }
 
+    public static void authenticateUser(Http.Context ctx, String userName){
+        ctx.session().clear();
+        ctx.session().put("userName", userName);
+    }
+
     /**
      * Gets the {@link User} model for the currently authenticated user.
      *

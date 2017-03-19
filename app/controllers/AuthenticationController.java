@@ -72,6 +72,8 @@ public class AuthenticationController extends Controller {
             MailController mc = new MailController();
             mc.sendMail("Welcome to ZAStream, "+newUser.getUserName()+"!", newUser.getUserName(), newUser.getEmail(), getRegistrationEmail(newUser));
             Logger.debug("Sent Welcome Email to "+newUser.getEmail());
+            //Log user into site.
+            Secured.authenticateUser(ctx(), newUser.getUserName());
         }else{
             Logger.debug("Unsucessful New User: "+ newUser.getUserName());
             Logger.debug("Errors: "+errors.toString());
@@ -81,10 +83,10 @@ public class AuthenticationController extends Controller {
                 registerForm.reject(e.key(), e.message());
             }
 
-            return badRequest(views.html.register.render("Registration Issues", registerForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+            return badRequest(views.html.register.render("Registration Issues...", registerForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }
 
-        return redirect(controllers.routes.HomeController.index());
+        return ok(views.html.register.render("Registration Success!", registerForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
 
@@ -122,8 +124,7 @@ public class AuthenticationController extends Controller {
         String pass = dynForm.get("passWord");
 
         if(User.isValid(user, pass)){
-            session().clear();
-            session("userName", user);
+            Secured.authenticateUser(ctx(), user);
             return redirect(routes.HomeController.index());
 
         }else if(!User.isUser(user)){//not a user
@@ -133,7 +134,6 @@ public class AuthenticationController extends Controller {
             loginForm.reject("passWord", "Invalid Password");
             return badRequest(views.html.login.render("Invalid Password", loginForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }
-
     }
 
     /**

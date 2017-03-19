@@ -28,10 +28,13 @@
                     @if(registerForm.error("userName")!=null){
                         <p class="errormsg">This username is already taken! Try another.</p>
                     }
-                        @*
-                        @for(error <- registerForm.errors()){
-                            <p class="errormsg">@error</p>
-                        }*@
+                }
+                @if(title.contains("Registration Success!")){
+                    <script type="text/javascript">
+                            $(document).ready(function(){
+                                $("#justRegistered").modal('show');
+                            });
+                    </script>
                 }
 
                 <form method="post" action="@routes.AuthenticationController.newUser()">
@@ -45,4 +48,15 @@
         </div>
 
 
+    <div class="modal fade" id="justRegistered" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Registration Success!</h4>
+            </div>
+            <div class="modal-content">
+                Thank you for registering. Please check your email for information on how to get started streaming and to get a copy of you stream key!
+            </div>
+        </div>
+    </div>
 }
