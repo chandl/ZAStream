@@ -33,6 +33,9 @@
                     <script type="text/javascript">
                             $(document).ready(function(){
                                 $("#justRegistered").modal('show');
+                                $('#justRegistered').on('hidden.bs.modal', function (e) {
+                                    window.location = "@routes.HomeController.index()"
+                                })
                             });
                     </script>
                 }

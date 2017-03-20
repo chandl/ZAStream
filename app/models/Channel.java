@@ -5,6 +5,7 @@ import play.Logger;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -76,6 +77,12 @@ public class Channel extends Model{
         List<Channel> channels = find.where().eq("streamKey", key).findList();
 
         return channels.size() > 0;
+    }
+
+    public static boolean isStreaming(String key){
+        File streamFile = new File("/HLS/live/"+key+"/index.m3u8");
+
+        return streamFile.exists();
     }
 
 
