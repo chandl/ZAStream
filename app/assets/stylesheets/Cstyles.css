@@ -1,0 +1,121 @@
+h1{
+    color:white;
+}
+#sorry{
+    text-align: center;
+    padding-top: 30%;
+}
+section.main-body{
+  margin-top: 7%;
+}
+
+
+/*Remove navbar background*/
+.navbar-default.affix {
+    background-color: rgba(255,255,255,0.2);
+}
+
+body {
+    margin:0;
+    padding:0;
+    /*background:url(../assets/img/registerPage/cbackground.jpg) no-repeat;*/
+    background-color: #282828;
+    background-attachment:fixed;
+    background-position:center;
+    background-size:cover;
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    -o-background-size:cover;
+    font:12px arial;
+    color: #222;
+    text-align:center;
+    }
+
+.view-stats{
+    margin:0 auto;
+
+    width: inherit;
+    background-size: auto;
+    display: inline;
+    text-align: center;
+}
+.view-stats span{
+    margin:0;
+    padding:0;
+}
+
+section.one{
+    text-align:center;
+}
+form, p, span {
+    margin:0;
+    padding:0; }
+
+.video-player{
+  margin-left: auto;
+  margin-right: auto;
+}
+.navbar {
+	min-height: 95px !important;
+    background-color: rgba(255,255,255,.8);
+}
+li.a.login{
+    color: black;
+}
+
+input { font:12px arial; }
+
+a {
+    color:#0000FF;
+    text-decoration:none; }
+
+    a:hover { text-decoration:underline; }
+
+#wrapper  , #loginform {
+    margin:0 auto;
+    padding-bottom:25px;
+    background:#EBF4FB;
+    width:504px;
+    border:1px solid #ACD8F0; }
+
+#loginform { padding-top:18px; }
+
+#loginform p { margin: 5px; }
+
+#chatbox {
+    text-align:left;
+    margin:0 auto;
+    margin-bottom:25px;
+    padding:10px;
+    background:#fff;
+    height:270px;
+    width:80%;
+    border:1px solid #ACD8F0;
+    overflow:auto; }
+
+#usermsg {
+    width:395px;
+    border:1px solid #ACD8F0; }
+
+#submit { width: 60px; }
+
+.error { color: #ff0000; }
+
+#menu { padding:12.5px 25px 12.5px 25px; }
+
+.welcome { float:left; }
+
+.logout { float:right; }
+
+.msgln { margin:0 0 2px 0; }
+
+.footer {
+  color:#fff;
+}
+.footer a:hover {
+    color:#c0392b;
+    transition: all 0.5s ease-in-out;
+}
+
+
+

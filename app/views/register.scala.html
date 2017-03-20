@@ -1,0 +1,68 @@
+@* This the registeration form page for user to register an account throgh ZAStream DB*@
+@(title: String,
+        registerForm: Form[views.formdata.RegisterForm], isLoggedIn: Boolean, userInfo: User)
+
+@import assets.constant.Constants
+
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page.
+*@
+@main(title, isLoggedIn, userInfo) {
+
+        <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
+
+
+        <div class="log">
+            <div class="content2">
+                <h3>ZAStream - Sign Up</h3>
+                @if(registerForm.hasErrors) {
+                    @if(registerForm.error("emailRegistered")!=null){
+                        <p class="errormsg">The email address is already registered! Try another.</p>
+                    }
+                    @if(registerForm.error("emailInvalid")!=null){
+                        <p class="errormsg">The email address is invalid in format!</p>
+                    }
+
+                    @if(registerForm.error("userName")!=null){
+                        <p class="errormsg">This username is already taken! Try another.</p>
+                    }
+                    @if(registerForm.error("userNameInvalid")!=null){
+                        <p class="errormsg">Sorry, you cannot have special characters in your username (Except '-' and '_').</p>
+                    }
+                }
+                @if(title.contains("Registration Success!")){
+                    <script type="text/javascript">
+                            $(document).ready(function(){
+                                $("#justRegistered").modal('show');
+                                $('#justRegistered').on('hidden.bs.modal', function (e) {
+                                    window.location = "@routes.HomeController.index()"
+                                })
+                            });
+                    </script>
+                }
+
+                <form method="post" action="@routes.AuthenticationController.newUser()">
+                    <input type="text" name="userName" value="@Constants.USERNAME_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.USERNAME_PLACEHOLDER';}">
+                    <input type="text" name="email" value="@Constants.EMAIL_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.EMAIL_PLACEHOLDER';}">
+                    <input type="password" name="passWord" value="@Constants.PASSWORD_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {tis.value = '@Constants.PASSWORD_PLACEHOLDER';}">
+                    <input type="submit" class="register" value="register" />
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+    <div class="modal fade" id="justRegistered" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Registration Success!</h4>
+            </div>
+            <div class="modal-content">
+                Thank you for registering. Please check your email for information on how to get started streaming and to get a copy of your stream key!
+            </div>
+        </div>
+    </div>
+}

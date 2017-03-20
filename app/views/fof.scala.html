@@ -1,0 +1,24 @@
+@* This page displayes 404 type error message if the channel page is not exist
+ *
+*@
+@(stream: String, isLoggedIn: Boolean, userInfo: User)
+
+
+@main(stream, isLoggedIn, userInfo) {
+    <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
+    <style>
+      h2,h3{
+        text-align: center;
+        margin-top: 20%;
+      }
+    </style>
+
+    <h2>404! Page not Found</h2>
+    <h3><a onclick="goBack()">Go to Previous Page</a></h3>
+
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+}
