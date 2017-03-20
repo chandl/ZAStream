@@ -28,6 +28,9 @@
                     @if(registerForm.error("userName")!=null){
                         <p class="errormsg">This username is already taken! Try another.</p>
                     }
+                    @if(registerForm.error("userNameInvalid")!=null){
+                        <p class="errormsg">Sorry, you cannot have special characters in your username (Except '-' and '_').</p>
+                    }
                 }
                 @if(title.contains("Registration Success!")){
                     <script type="text/javascript">
@@ -58,7 +61,7 @@
                 <h4 class="modal-title">Registration Success!</h4>
             </div>
             <div class="modal-content">
-                Thank you for registering. Please check your email for information on how to get started streaming and to get a copy of you stream key!
+                Thank you for registering. Please check your email for information on how to get started streaming and to get a copy of your stream key!
             </div>
         </div>
     </div>

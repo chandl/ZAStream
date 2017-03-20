@@ -452,7 +452,7 @@ public class AuthenticationController extends Controller {
                 "                  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                      <td>\n" +
-                "                        <img src=\"http://zastream.com/big-logo.png\"/>\n" +
+                "                        <img src=\"http://zastream.com/assets/big-logo.png\"/>\n" +
                 "                        <h2>Hi "+userName+",</h2>\n" +
                 "                        <p>Welcome to ZAStream! A new live video streaming website built for professionals, teachers, gamers, and everyone in-between.</p>\n" +
                 "\n" +
