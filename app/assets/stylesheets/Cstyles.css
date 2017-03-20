@@ -1,6 +1,10 @@
 h1{
     color:white;
 }
+#sorry{
+    text-align: center;
+    padding-top: 30%;
+}
 section.main-body{
   margin-top: 7%;
 }

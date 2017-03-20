@@ -5,6 +5,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 
+import static play.mvc.Controller.session;
+
 /**
  * Secured: Class to handle Authentication and Session Storage
  *
@@ -54,6 +56,12 @@ public class Secured extends Security.Authenticator {
      */
     public static boolean isLoggedIn(Http.Context ctx){
         return (getName(ctx) != null);
+    }
+
+    public static void authenticateUser(Http.Context ctx, String userName){
+        ctx.session().clear();
+        ctx.session().put("userName", userName);
+        session("userName", userName);
     }
 
     /**
