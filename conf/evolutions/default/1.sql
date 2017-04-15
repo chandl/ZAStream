@@ -20,7 +20,9 @@ create table chat (
   chatid                        integer auto_increment not null,
   senderid                      integer,
   roomid                        integer,
-  senttime                      date,
+  sentdate                      date,
+  senttime                      time,
+  message                       varchar(255),
   constraint pk_chat primary key (chatid)
 );
 

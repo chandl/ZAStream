@@ -48,8 +48,8 @@ public class ChannelController extends Controller {
         return ok(views.js.viewCount.render(stream));
     }
 
-    public Result webSocketChat(String stream){
-        return ok(views.js.chat.render(stream));
+    public Result webSocketChat(String stream, int userId){
+        return ok(views.js.chat.render(stream, userId));
     }
 
     public LegacyWebSocket<String> viewCountInterface(String channel){
@@ -63,10 +63,10 @@ public class ChannelController extends Controller {
         };
     }
 
-    public LegacyWebSocket<JsonNode> chatInterface(String channel){
-        return new LegacyWebSocket<JsonNode>() {
+    public LegacyWebSocket<String> chatInterface(String channel){
+        return new LegacyWebSocket<String>() {
             @Override
-            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
+            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
                 ChatController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
             }
         };

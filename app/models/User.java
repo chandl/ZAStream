@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 import helper.HashHelper;
+import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import javax.persistence.*;
@@ -146,7 +147,8 @@ public class User extends Model{
 
 
         if(!specialMatcher.matches()){
-            errors.add(new ValidationError("userNameInvalid", "Sorry, you cannot have special characters in your username (Except '-' and '_')."));
+            //TODO
+//            errors.add(new ValidationError("userNameInvalid", "Sorry, you cannot have special characters in your username (Except '-' and '_')."));
         }
 
         if(!emailMatcher.matches()){
@@ -186,6 +188,10 @@ public class User extends Model{
         return(users.size() == 0)? null:users.get(0);
     }
 
+    public static User findById(int id){
+        List<User> users = find.where().eq("userId", id).findList();
+        return(users.size() == 0)? null:users.get(0);
+    }
 
     @Override
     public String toString() {
