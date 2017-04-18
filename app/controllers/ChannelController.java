@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import helper.Secured;
 import models.Channel;
 import models.User;
@@ -43,8 +44,12 @@ public class ChannelController extends Controller {
         return ok(views.html.channel.render(name, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), key, totalViews));
     }
 
-    public Result wsVC(String stream){
+    public Result webSocketViewCount(String stream){
         return ok(views.js.viewCount.render(stream));
+    }
+
+    public Result webSocketChat(String stream, int userId){
+        return ok(views.js.chat.render(stream, userId));
     }
 
     public LegacyWebSocket<String> viewCountInterface(String channel){
@@ -53,9 +58,19 @@ public class ChannelController extends Controller {
         return new LegacyWebSocket<String>() {
             @Override
             public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                ViewCount.start(in,out, Channel.findChannel(User.findByUsername(channel)));
+                ViewCountController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
             }
         };
+    }
+
+    public LegacyWebSocket<String> chatInterface(String channel){
+        return new LegacyWebSocket<String>() {
+            @Override
+            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
+                ChatController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
+            }
+        };
+
     }
 
 }

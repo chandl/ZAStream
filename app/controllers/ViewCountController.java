@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewCount {
+public class ViewCountController {
     private static Map<Integer, List<WebSocket.Out<String>>> connections = new HashMap<>();
 
     public static void start(WebSocket.In<String> in, WebSocket.Out<String> out, Channel channel){
@@ -26,7 +26,7 @@ public class ViewCount {
 
         increaseCount(channel);
 
-        in.onClose(() -> ViewCount.decreaseCount(channel, out));
+        in.onClose(() -> ViewCountController.decreaseCount(channel, out));
     }
 
     public static void increaseCount(Channel channel){
