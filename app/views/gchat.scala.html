@@ -1,0 +1,42 @@
+@(title: String, isLoggedIn: Boolean, userInfo: User)
+
+@main(title, isLoggedIn, userInfo) {
+
+  <link type="text/css" rel="stylesheet" href="/assets/stylesheets/Cstyles.css" />
+
+
+  @if(isLoggedIn){
+    <section class="no-padding" id="chat">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
+            <div id="wrapper">
+              <div id="menu">
+                <p class="welcome">Welcome, @userInfo.userName<b></b></p>
+                <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+                <div style="clear:both"></div>
+              </div>
+
+              <div id="chatbox">
+
+
+
+              </div>
+
+
+              <input name="usermsg" type="text" id="usermsg" size="63" />
+              <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  }
+
+  <script src="@routes.ChatController.webSocketGeneralChat(userInfo.userId)" type="text/javascript"></script>
+
+
+}

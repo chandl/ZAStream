@@ -9,6 +9,9 @@ section.main-body{
   margin-top: 7%;
 }
 
+section#chat{
+    margin-top:25%;
+}
 
 /*Remove navbar background*/
 .navbar-default.affix {

@@ -26,6 +26,10 @@ GET     /viewCount.js   controllers.ChannelController.webSocketViewCount(name: S
 #GET     /viewCountInterface     controllers.ChannelController.viewCountInterface()
 GET     /viewCount/:channel  controllers.ChannelController.viewCountInterface(channel: String)
 
-GET     /chat.js        controllers.ChannelController.webSocketChat(name: String, userId: Integer)
-GET     /chat/:channel  controllers.ChannelController.chatInterface(channel: String)
+GET     /chat.js        controllers.ChatController.webSocketChannelChat(name: String, userId: Integer)
+GET     /chat/:channel  controllers.ChatController.chatInterface(channel: String)
+
+GET     /gchat          controllers.ChatController.generalChat
+GET     /gchat.js       controllers.ChatController.webSocketGeneralChat(userId: Integer)
+
 GET     /:name           controllers.ChannelController.show(name: String)

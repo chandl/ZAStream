@@ -52,14 +52,15 @@
                 </div>
             </div>
         </nav>
-        @* And here's where we render the `Html` object containing
-         * the page content. *@
+
         @content
 
         <footer id="footer">
             <div class="container-fluid">
+                <span class="pull-left text-muted footer-text"><a href="@routes.ChatController.generalChat()">General Chat Room</a></span>
 
-                <span class="pull-right text-muted footer-text"><a href="http://zastream.com">Copyright ZAStream</a> &copy; 2017</span>
+                <span class="pull-right text-muted footer-text"><a href="@routes.HomeController.index()">Copyright ZAStream</a> &copy; 2017</span>
+
             </div>
         </footer>
 
