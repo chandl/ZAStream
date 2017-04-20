@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import helper.Secured;
 import models.Channel;
+import models.ChatRoom;
 import models.User;
 import play.Logger;
 import play.mvc.Controller;
@@ -34,7 +35,7 @@ public class ChannelController extends Controller {
         }
 
         User u = User.findByUsername(name);
-        Channel c= Channel.findChannel(u);
+        Channel c = Channel.findChannel(u);
 
         c.setTotalViews(c.getTotalViews() + 1);
         c.save();
@@ -48,29 +49,13 @@ public class ChannelController extends Controller {
         return ok(views.js.viewCount.render(stream));
     }
 
-    public Result webSocketChat(String stream, int userId){
-        return ok(views.js.chat.render(stream, userId));
-    }
-
     public LegacyWebSocket<String> viewCountInterface(String channel){
-
-        Logger.info("viewCountInterface Called. Channel: "+channel);
         return new LegacyWebSocket<String>() {
             @Override
             public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
                 ViewCountController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
             }
         };
-    }
-
-    public LegacyWebSocket<String> chatInterface(String channel){
-        return new LegacyWebSocket<String>() {
-            @Override
-            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                ChatController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
-            }
-        };
-
     }
 
 }

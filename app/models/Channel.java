@@ -167,10 +167,10 @@ public class Channel extends Model{
         List<Channel> theChannel = find.where().eq("userID", user.userId).findList();
 
         if(theChannel.size() == 0) {
-            Logger.debug("No Channel Found for ID: "+ user.userId + ", Name: "+ user.userName);
+//            Logger.debug("No Channel Found for ID: "+ user.userId + ", Name: "+ user.userName);
             return null;
         }else{
-            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
+//            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
             return theChannel.get(0);
         }
     }

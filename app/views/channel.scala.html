@@ -89,6 +89,6 @@
         </script>
     }
 
-   @*<script src="@routes.ChannelController.webSocketViewCount(stream)" type="text/javascript"></script>*@
-   <script src="@routes.ChannelController.webSocketChat(stream, userInfo.userId)" type="text/javascript"></script>
+   <script src="@routes.ChannelController.webSocketViewCount(stream)" type="text/javascript"></script>
+   <script src="@routes.ChatController.webSocketChannelChat(stream, userInfo.userId)" type="text/javascript"></script>
 }

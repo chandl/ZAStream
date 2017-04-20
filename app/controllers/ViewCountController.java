@@ -15,10 +15,10 @@ public class ViewCountController {
     public static void start(WebSocket.In<String> in, WebSocket.Out<String> out, Channel channel){
         List<WebSocket.Out<String>> conn;
         if((conn = connections.get(channel.getChannelID()) ) !=  null){
-            Logger.debug("New Connection! connections not null");
+//            Logger.debug("New Connection connections not null" );
             conn.add(out);
         }else{
-            Logger.debug("New Connection! connections null");
+//            Logger.debug("New Connection! connections null");
             conn = new ArrayList<>();
             conn.add(out);
             connections.put(channel.getChannelID(), conn);
@@ -33,7 +33,7 @@ public class ViewCountController {
         channel.setCurrentViewers(connections.get(channel.getChannelID()).size());
         channel.save();
         notifyAll(channel, channel.getCurrentViewers());
-        Logger.info("Someone Connected to " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
+        Logger.debug("Someone Connected to " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
     }
 
     public static void decreaseCount(Channel channel, WebSocket.Out<String> conn){
@@ -41,7 +41,7 @@ public class ViewCountController {
         channel.setCurrentViewers(connections.get(channel.getChannelID()).size());
         channel.save();
         notifyAll(channel, channel.getCurrentViewers());
-        Logger.info("Someone Disconnected from " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
+        Logger.debug("Someone Disconnected from " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
     }
 
     public static void notifyAll(Channel channel, int viewCount){

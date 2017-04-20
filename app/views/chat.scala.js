@@ -1,4 +1,4 @@
-@(channel: String, userId: Integer)
+@(room: String, userId: Integer)
 
 function d2(n) {
     if(n<9) return "0"+n;
@@ -7,19 +7,13 @@ function d2(n) {
 
 $(function(){
     var WS = window['MozWebSocket'] ? window['MozWebSocket'] : WebSocket;
-    var socket = new WS('@routes.ChannelController.chatInterface(channel).webSocketURL(request)');
-
-    socket.onopen = function(e){
-
-    }
+    var socket = new WS('@routes.ChatController.chatInterface(room).webSocketURL(request)');
 
     var writeMessages = function(event){
-
         var msg = JSON.parse(event.data);
         var d = new Date().toTimeString().split(' ')[0];
         var sender = msg.sender;
         var message = msg.message;
-
 
 
         $('#chatbox').prepend('<p><small>('+d+')</small>'+sender+': '+ message +'</p>');

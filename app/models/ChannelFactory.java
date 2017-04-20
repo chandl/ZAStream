@@ -18,7 +18,11 @@ public class ChannelFactory {
      * @return
      */
     public static Channel newChannel(String channelType, User owner) {
-        return new Channel(channelType, randomStreamKey(), null, owner );
+        Channel c = new Channel(channelType, randomStreamKey(), null, owner );
+        ChatRoom room = new ChatRoom(c);
+        room.save();
+        c.setChatRoom(room);
+        return c;
     }
 
     /**

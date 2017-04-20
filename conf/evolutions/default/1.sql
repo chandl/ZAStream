@@ -30,6 +30,7 @@ create table chatroom (
   roomid                        integer auto_increment not null,
   currentchatters               integer,
   chatcount                     integer,
+  publicroom                    tinyint(1) default 0,
   constraint pk_chatroom primary key (roomid)
 );
 
