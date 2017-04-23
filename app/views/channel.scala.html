@@ -19,7 +19,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
                             <h1 text-align='center'>@stream</h1>
-                            <video id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
+                            <video autoplay id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
                                 <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
                             </video>
 
@@ -76,10 +76,11 @@
             </section>
         }
 
-
-    @if(Channel.isStreaming(key)) {
+    @if(!Channel.isStreaming(key)) {
         <script>
-                var player = videojs('#player');
+                var player = videojs('#player', {
+                    fluid: true
+                });
                 player.brand({
                     image: "assets/images/minimized-logo1.png",
                     title: "ZAStream",
@@ -90,5 +91,8 @@
     }
 
    <script src="@routes.ChannelController.webSocketViewCount(stream)" type="text/javascript"></script>
-   <script src="@routes.ChatController.webSocketChannelChat(stream, userInfo.userId)" type="text/javascript"></script>
+    @if(isLoggedIn) {
+        <script src="@routes.ChatController.webSocketChannelChat(stream, userInfo.userId)" type="text/javascript"></script>
+    }
+
 }
