@@ -142,13 +142,12 @@ public class User extends Model{
         Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
         Matcher emailMatcher = emailPattern.matcher(email);
 
-        Pattern specialPattern = Pattern.compile("[^A-Za-z0-9-_]");
+        Pattern specialPattern = Pattern.compile("^[A-Za-z0-9-_]*$");
         Matcher specialMatcher = specialPattern.matcher(userName);
 
 
         if(!specialMatcher.matches()){
-            //TODO
-//            errors.add(new ValidationError("userNameInvalid", "Sorry, you cannot have special characters in your username (Except '-' and '_')."));
+            errors.add(new ValidationError("userNameInvalid", "Sorry, you cannot have special characters in your username (Except '-' and '_')."));
         }
 
         if(!emailMatcher.matches()){
