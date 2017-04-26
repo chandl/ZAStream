@@ -8,6 +8,7 @@ GET     /                              controllers.HomeController.index
 GET     /public/stylesheets/nav.css                     controllers.Assets.at(path="/public/stylesheets", file="nav.css")
 GET     /public/stylesheets/bootstrap.min.css           controllers.Assets.at(path="/public/stylesheets", file="bootstrap.min.css")
 GET     /public/stylesheets/Rstyle.css                  controllers.Assets.at(path="/public/stylesheets", file="Rstyle.css")
+GET     /assets/big-logo.png                  controllers.Assets.at(path="/public", file="big-logo.png")
 
 GET     /index.html           controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
