@@ -1,10 +1,14 @@
 package helper;
 
+import models.Channel;
 import models.User;
+import play.api.libs.Crypto;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 
+import static play.mvc.Controller.request;
+import static play.mvc.Controller.response;
 import static play.mvc.Controller.session;
 
 /**
@@ -62,6 +66,24 @@ public class Secured extends Security.Authenticator {
         ctx.session().clear();
         ctx.session().put("userName", userName);
         session("userName", userName);
+    }
+
+    public static void addViewedChannel(Http.Context ctx, Channel channel){
+        response().setCookie("viewed-"+channel.getChannelID(), Crypto.crypto().sign(channel.getStreamKey()), 86400);
+    }
+
+    public static boolean checkIfViewedChannel(Http.Context ctx, Channel channel){
+        Http.Cookie cookie = request().cookie("viewed-"+channel.getChannelID());
+
+        if(cookie!= null){
+            if(!cookie.value().equals(Crypto.crypto().sign(channel.getStreamKey()))) { //matches!
+                addViewedChannel(ctx, channel); //update cookie again
+            }
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     /**

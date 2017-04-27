@@ -1,12 +1,9 @@
 package controllers;
 
 import helper.Secured;
-import play.Play;
-import play.api.libs.mailer.MailerClient;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
-import play.libs.mailer.Email;
 import play.mvc.Result;
 import views.formdata.FeedbackForm;
 import views.html.feedback;
@@ -45,8 +42,8 @@ public class FeedbackController {
 
         String rate = dynform.get("star");
         int rating = Integer.parseInt(rate);
+        fMail.sendMail("New Feedback From "+ name, "ZAStream Support","support@zastream.com", String.format(feedbackTemplate, name, email, message, rating));
 
-//        fMail.sendMail("New Feedback From "+ name, "ZAStream Support","support@zastream.com", String.format(feedbackTemplate, name, email, message));
         return ok(views.html.feedback.render("Feedback Submitted!", feedbackForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
@@ -64,6 +61,7 @@ public class FeedbackController {
             "       <p>\n" +
             "           %s\n" +
             "       </p>\n" +
+            "<p>Rating from 1 to 5: %d</p>\n"+
             "   </body>\n" +
             "</html>";
 

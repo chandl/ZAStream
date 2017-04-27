@@ -1,11 +1,8 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import helper.Secured;
 import models.Channel;
-import models.ChatRoom;
 import models.User;
-import play.Logger;
 import play.mvc.Controller;
 import play.mvc.LegacyWebSocket;
 import play.mvc.Result;
@@ -37,8 +34,11 @@ public class ChannelController extends Controller {
         User u = User.findByUsername(name);
         Channel c = Channel.findChannel(u);
 
-        c.setTotalViews(c.getTotalViews() + 1);
-        c.save();
+        if(!Secured.checkIfViewedChannel(ctx(), c)){
+            c.setTotalViews(c.getTotalViews() + 1);
+            Secured.addViewedChannel(ctx(), c);
+            c.save();
+        }
         int totalViews = c.getTotalViews();
         String key = c.getStreamKey();
 
