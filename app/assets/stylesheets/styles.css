@@ -176,6 +176,9 @@ footer {
 .footer-text a{
   color: white;
 }
+.footer-text#separator{
+    margin: 0 5px;
+}
 
 @media(max-width:768px){
   .navbar-brand img{
