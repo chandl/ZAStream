@@ -19,10 +19,7 @@
 
               <div id="chatbox">
 
-
-
               </div>
-
 
               <input name="usermsg" type="text" id="usermsg" size="63" />
               <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
@@ -36,7 +33,14 @@
     </section>
   }
 
-  <script src="@routes.ChatController.webSocketGeneralChat(userInfo.userId)" type="text/javascript"></script>
-
+  @if(isLoggedIn){
+    <script src="@routes.ChatController.webSocketGeneralChat(userInfo.userId)" type="text/javascript"></script>
+  }else{
+    <script type="text/javascript">
+      window.onload = function(){
+        window.location="@routes.AuthenticationController.loginPage()";
+      }
+    </script>
+  }
 
 }

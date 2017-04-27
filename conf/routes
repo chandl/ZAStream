@@ -20,6 +20,9 @@ POST    /register               controllers.AuthenticationController.newUser
 GET     /login                  controllers.AuthenticationController.loginPage
 POST    /login                  controllers.AuthenticationController.authenticate
 
+GET     /feedback               controllers.FeedbackController.feedbackPage
+POST    /feedback               controllers.FeedbackController.sendFeedBack
+
 GET     /logout                 controllers.AuthenticationController.logout
 
 #View Streams
