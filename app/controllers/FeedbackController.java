@@ -42,8 +42,8 @@ public class FeedbackController {
 
         String rate = dynform.get("star");
         int rating = Integer.parseInt(rate);
-        fMail.sendMail("New Feedback From "+ name, "ZAStream Support","support@zastream.com", String.format(feedbackTemplate, name, email, message, rating));
 
+        fMail.sendMail("New Feedback From "+ name, "ZAStream Support","support@zastream.com", String.format(feedbackTemplate, name, email, message, rating));
         return ok(views.html.feedback.render("Feedback Submitted!", feedbackForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
