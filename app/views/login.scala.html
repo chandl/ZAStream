@@ -26,8 +26,13 @@
                     }
                 }
                 <form method="post" action="@routes.AuthenticationController.authenticate()">
-                    <input type="text" name="userName" placeholder="@Constants.USERNAME_PLACEHOLDER" />
-                    <input type="password" name="passWord" placeholder="@Constants.PASSWORD_PLACEHOLDER" />
+
+                    @if(flash.containsKey("userName")) {
+                        <input type="text" name="userName" required value="@flash.get("userName")" placeholder="@Constants.USERNAME_PLACEHOLDER" />
+                    }else{
+                        <input type="text" name="userName" required placeholder="@Constants.USERNAME_PLACEHOLDER" />
+                    }
+                    <input type="password" name="passWord" required placeholder="@Constants.PASSWORD_PLACEHOLDER" />
                     <input type="submit" class="register" value="login" />
                 </form>
             </div>
