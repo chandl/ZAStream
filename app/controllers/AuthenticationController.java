@@ -54,7 +54,12 @@ public class AuthenticationController extends Controller {
     public Result newUser(){
         DynamicForm dynForm = Form.form().bindFromRequest();//Bind data from POST to the form
         registerForm = formFactory.form(RegisterForm.class);
-        User newUser = new User(dynForm.get("userName"), dynForm.get("passWord"),dynForm.get("email") );
+
+        String userName = dynForm.get("userName");
+        String password = dynForm.get("password");
+        String email = dynForm.get("email");
+
+        User newUser = new User(userName, password, email);
 
         //Use the User.validate() method to validate constraints
         List<ValidationError> errors = newUser.validate();
@@ -77,6 +82,9 @@ public class AuthenticationController extends Controller {
         }else{
             Logger.debug("Unsucessful New User: "+ newUser.getUserName());
             Logger.debug("Errors: "+errors.toString());
+
+            flash("userName",userName);
+            flash("email",email);
 
             //Add errors to registrationForm, these are passed back to the page
             for(ValidationError e : errors) {
@@ -129,6 +137,7 @@ public class AuthenticationController extends Controller {
 
         }else if(!User.isUser(user)){//not a user
             loginForm.reject("userName", "Invalid Username");
+            flash("userName",user);
             return badRequest(views.html.login.render("Invalid Username", loginForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }else{//bad password
             loginForm.reject("passWord", "Invalid Password");

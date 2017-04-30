@@ -44,9 +44,19 @@
                 }
 
                 <form method="post" action="@routes.AuthenticationController.newUser()">
-                    <input type="text" name="userName" placeholder="@Constants.USERNAME_PLACEHOLDER" />
-                    <input type="text" name="email" placeholder="@Constants.EMAIL_PLACEHOLDER" />
-                    <input type="password" name="passWord" placeholder="@Constants.PASSWORD_PLACEHOLDER" />
+
+                    @if(flash.containsKey("userName")) {
+                        <input type="text" name="userName" required value="@flash.get("userName")" placeholder="@Constants.USERNAME_PLACEHOLDER" />
+                    }else{
+                        <input type="text" name="userName" required placeholder="@Constants.USERNAME_PLACEHOLDER" />
+                    }
+
+                    @if(flash.containsKey("email")) {
+                        <input type="text" name="email" required value="@flash.get("email")"placeholder="@Constants.EMAIL_PLACEHOLDER" />
+                    }else{
+                        <input type="text" name="email" required placeholder="@Constants.EMAIL_PLACEHOLDER" />
+                    }
+                    <input type="password" name="passWord" required placeholder="@Constants.PASSWORD_PLACEHOLDER" />
                     <input type="submit" class="register" value="register" />
                 </form>
             </div>
