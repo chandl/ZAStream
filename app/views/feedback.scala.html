@@ -1,3 +1,4 @@
+@import views.formdata.FeedbackForm
 @(title: String,
         feedbackForm: Form[views.formdata.FeedbackForm], isLoggedIn: Boolean, userInfo: User)
 
@@ -6,6 +7,14 @@
     <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Fstyles.css'>
 
     <div class="feedback">
+        @if(feedbackForm.hasErrors) {
+            @if(feedbackForm.error("emailInvalid")!=null) {
+                <p class="errormsg">The email address is invalid in format!</p>
+            }
+            @if(feedbackForm.error("badRating")!=null){
+                <p class="errormsg">Please leave a rating!</p>
+            }
+        }
         @if(title.contains("Feedback Submitted!")){
             <script type="text/javascript">
                     $(document).ready(function(){
@@ -18,31 +27,44 @@
         }
       <form method="POST" action="@routes.FeedbackController.sendFeedBack()">
           <h2>Share Your Thoughts!</h2>
-            <input type="text" name="name" placeholder="Your Name"><br><br>
-            <input type="text" name="email" placeholder="Your Email"><br><br>
+          @if(flash.containsKey("name")) {
+              <input type="text" name="name" value="@flash.get("name")" required placeholder="Your Name"><br><br>
+          } else {
+              <input type="text" name="name" required placeholder="Your Name"><br><br>
+          }
+          @if(flash.containsKey("email")) {
+              <input type="email" name="email" value="@flash.get("email")" required placeholder="Your Email"><br><br>
+          }else{
+              <input type="email" name="email" required placeholder="Your Email"><br><br>
+          }
 
+
+
+          <h3>Rate your Experience:</h3>
+          <div class="stars">
+              <input class="star star-5" id="star-5" type="radio" name="star" value="5"/>
+              <label class="star star-5" for="star-5"></label>
+
+              <input class="star star-4" id="star-4" type="radio" name="star" value="4"/>
+              <label class="star star-4" for="star-4"></label>
+
+              <input class="star star-3" id="star-3" type="radio" name="star" value="3"/>
+              <label class="star star-3" for="star-3"></label>
+
+              <input class="star star-2" id="star-2" type="radio" name="star" value="2"/>
+              <label class="star star-2" for="star-2"></label>
+
+              <input class="star star-1" id="star-1" type="radio" name="star" value="1"/>
+              <label class="star star-1" for="star-1"></label>
+          </div>
+
+          @if(flash.containsKey("message")) {
+              <textarea name="message" rows="15" cols="50" placeholder="Your Feedback">@flash.get("message")</textarea><br><br>
+          }else{
               <textarea name="message" rows="15" cols="50" placeholder="Your Feedback"></textarea><br><br>
+          }
 
-                <h3>Rate your Experience:</h3>
-                <div class="stars">
-                    <input class="star star-5" id="star-5" type="radio" name="star" value="5"/>
-                    <label class="star star-5" for="star-5"></label>
-
-                    <input class="star star-4" id="star-4" type="radio" name="star" value="4"/>
-                    <label class="star star-4" for="star-4"></label>
-
-                    <input class="star star-3" id="star-3" type="radio" name="star" value="3"/>
-                    <label class="star star-3" for="star-3"></label>
-
-                    <input class="star star-2" id="star-2" type="radio" name="star" value="2"/>
-                    <label class="star star-2" for="star-2"></label>
-
-                    <input class="star star-1" id="star-1" type="radio" name="star" value="1"/>
-                    <label class="star star-1" for="star-1"></label>
-                </div>
-
-            <input type="submit" class="submit" value="Submit">
-
+          <input type="submit" class="submit" value="Submit">
 
       </form>
      </div>

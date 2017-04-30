@@ -1,16 +1,24 @@
 package controllers;
 
 import helper.Secured;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
 import play.mvc.Result;
 import views.formdata.FeedbackForm;
 import views.html.feedback;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static play.mvc.Controller.flash;
 import static play.mvc.Http.Context.Implicit.ctx;
+import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 
 /**
@@ -25,6 +33,9 @@ public class FeedbackController {
 
     @Inject FormFactory formFactory;
     Form<FeedbackForm> feedbackForm;
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     private static MailController fMail = new MailController();
 
@@ -39,12 +50,43 @@ public class FeedbackController {
         String email = dynform.get("email");
         String name = dynform.get("name");
         String message = dynform.get("message");
-
         String rate = dynform.get("star");
+
+        List<ValidationError> errors = validate(email, rate!=null);
+        if(errors != null){
+            for(ValidationError e : errors){
+                feedbackForm.reject(e.key(), e.message());
+                Logger.debug("ValidationError on Feedback Page: " + e.key());
+            }
+
+            flash("message", message);
+            flash("email", email);
+            flash("name", name);
+            return badRequest(views.html.feedback.render("Feedback Issues...", feedbackForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+        }
+
         int rating = Integer.parseInt(rate);
+
 
         fMail.sendMail("New Feedback From "+ name, "ZAStream Support","support@zastream.com", String.format(feedbackTemplate, name, email, message, rating));
         return ok(views.html.feedback.render("Feedback Submitted!", feedbackForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+    }
+
+    public List<ValidationError> validate(String email, boolean rating){
+        List<ValidationError> errors = new ArrayList<ValidationError>();
+
+        Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher emailMatcher = emailPattern.matcher(email);
+
+        if(!emailMatcher.matches()){
+            errors.add(new ValidationError("emailInvalid", "Invalid e-mail entered."));
+        }
+
+        if(!rating){
+            errors.add(new ValidationError("badRating", "No rating entered."));
+        }
+
+        return errors.isEmpty()? null : errors;
     }
 
     private static final String feedbackTemplate = "<!DOCTYPE html>\n" +
