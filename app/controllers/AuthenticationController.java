@@ -168,7 +168,6 @@ public class AuthenticationController extends Controller {
                 "  <head>\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width\" />\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" +
-                "    <title>Simple Transactional Email</title>\n" +
                 "    <style>\n" +
                 "      /* -------------------------------------\n" +
                 "          GLOBAL RESETS\n" +
@@ -441,6 +440,10 @@ public class AuthenticationController extends Controller {
                 "        .btn-primary a:hover {\n" +
                 "          background-color: #34495e !important;\n" +
                 "          border-color: #34495e !important; } }\n" +
+                "        img.full {\n" +
+                "               width:50%;\n" +
+                "               height:auto;\n" +
+                "        }"+
                 "\n" +
                 "    </style>\n" +
                 "  </head>\n" +
@@ -461,8 +464,8 @@ public class AuthenticationController extends Controller {
                 "                  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                      <td>\n" +
-                "                        <img src=\"http://zastream.com/assets/big-logo.png\"/>\n" +
-                "                        <h2>Hi "+userName+",</h2>\n" +
+                "                        <img src=\"http://zastream.com/assets/big-logo.png\" class=\"full\"/>\n" +
+                "                        <h2>Hi %s,</h2>\n" +
                 "                        <p>Welcome to ZAStream! A new live video streaming website built for professionals, teachers, gamers, and everyone in-between.</p>\n" +
                 "\n" +
                 "                        <p>Want to get started Streaming Today but aren't sure how? Check out the link below to see how to use our favorite streaming software (OBS) (it's free!).</p>\n" +
@@ -488,7 +491,7 @@ public class AuthenticationController extends Controller {
                 "                        <p class=\"monospace\">\n" +
                 "                          Stream Type: <span class=\"highlight\">Custom Streaming Server</span> <br/>\n" +
                 "                          URL: <span class=\"highlight\">rtmp://dev.zastream.com/live</span> <br/>\n" +
-                "                          Stream Key: <span class=\"highlight\">"+streamKey+"</span> <br/>\n" +
+                "                          Stream Key: <span class=\"highlight\">%s</span> <br/>\n" +
                 "                        </p>\n" +
                 "\n" +
                 "                        <p>We really appreciate you testing our website and would love any feedback. Please send any comments, questions, or concerns to <a href=\"mailto: support@zastream.com\">support@zastream.com</a>.</p>\n" +
@@ -514,7 +517,6 @@ public class AuthenticationController extends Controller {
                 "                <tr>\n" +
                 "                  <td class=\"content-block\">\n" +
                 "                    <span class=\"apple-link\">Copyright ZAStream &copy; 2017</span>\n" +
-                "                    <br> Don't like these emails? <a href=\"#\">Unsubscribe</a>.\n" +
                 "                  </td>\n" +
                 "                </tr>\n" +
                 "              </table>\n" +
@@ -529,6 +531,7 @@ public class AuthenticationController extends Controller {
                 "    </table>\n" +
                 "  </body>\n" +
                 "</html>\n";
-        return registrationEmail;
+
+        return String.format(registrationEmail, userName, streamKey);
     }
 }
