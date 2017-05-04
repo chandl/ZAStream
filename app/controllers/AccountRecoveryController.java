@@ -1,169 +1,105 @@
 package controllers;
 
 import helper.Secured;
-import models.Channel;
-import models.ChannelFactory;
+import models.PasswordRecovery;
 import models.User;
 import play.Logger;
 import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.mvc.Controller;
-import play.mvc.Security;
-import views.formdata.LoginForm;
-import views.formdata.RegisterForm;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
+import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
+import views.formdata.PasswordRecoveryForm;
+
 import javax.inject.Inject;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * AuthenticationController: Controller to handle Signing up & Logging in.
- *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
- * @since 1.0
+ * Created by chandler on 5/3/17.
  */
-public class AuthenticationController extends Controller {
+public class AccountRecoveryController extends Controller {
+    @Inject
+    FormFactory formFactory;
+    Form<PasswordRecoveryForm> passwordRecoveryForm;
 
-    @Inject FormFactory formFactory;
-
-    Form<RegisterForm> registerForm;
-    Form<LoginForm> loginForm;
-
-    /**
-     * The registration page controller method. Shows the registration page.
-     *
-     * @return <code>HTTP OK</code> result.
-     */
-    public Result registerPage(){
-        registerForm = formFactory.form(RegisterForm.class);
-        return ok(register.render("Register", registerForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+    public Result recoveryPage(){
+        passwordRecoveryForm = formFactory.form(PasswordRecoveryForm.class);
+        return ok(views.html.account_recovery.render("Recover your Password", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
-    /**
-     * The controller method used to create new accounts.
-     * <p>
-     * Called from <code>POST /register</code>
-     * </p>
-     *
-     * @return <code>badRequest</code> if there were errors in registration, <code>redirect</code> to home page if successful.
-     */
-    public Result newUser(){
-        DynamicForm dynForm = Form.form().bindFromRequest();//Bind data from POST to the form
-        registerForm = formFactory.form(RegisterForm.class);
+    public Result sendRecovery(){
+        DynamicForm dynForm = Form.form().bindFromRequest();
+        passwordRecoveryForm = formFactory.form(PasswordRecoveryForm.class);
 
-        String userName = dynForm.get("userName");
-        String password = dynForm.get("password");
         String email = dynForm.get("email");
 
-        User newUser = new User(userName, password, email);
+        Pattern emailPattern = Pattern.compile(User.EMAIL_PATTERN);
+        Matcher emailMatcher = emailPattern.matcher(email);
 
-        //Use the User.validate() method to validate constraints
-        List<ValidationError> errors = newUser.validate();
-        if(errors == null){
-            Channel newChannel = ChannelFactory.newChannel("PUB", newUser);
+        User user = User.findByEmail(email);
 
-            //Add user & channel to DB
-            newUser.save();
-            newChannel.save();
+        //Bad email
+        if(!emailMatcher.matches() || !User.emailExists(email) || user == null){
+            ValidationError error = new ValidationError("emailInvalid", "Invalid e-mail entered.");
+            flash("email", email);
+            passwordRecoveryForm.reject(error);
 
-            Logger.debug("Successful New User:" + newUser.getUserName());
-            Logger.debug("New Channel Key: "+newChannel.getStreamKey());
-
-            //Sending Email
-            MailController mc = new MailController();
-            mc.sendMail("Welcome to ZAStream, "+newUser.getUserName()+"!", newUser.getUserName(), newUser.getEmail(), getRegistrationEmail(newUser));
-            Logger.debug("Sent Welcome Email to "+newUser.getEmail());
-            //Log user into site.
-            Secured.authenticateUser(ctx(), newUser.getUserName());
-        }else{
-            Logger.debug("Unsucessful New User: "+ newUser.getUserName());
-            Logger.debug("Errors: "+errors.toString());
-
-            flash("userName",userName);
-            flash("email",email);
-
-            //Add errors to registrationForm, these are passed back to the page
-            for(ValidationError e : errors) {
-                registerForm.reject(e.key(), e.message());
-            }
-
-            return badRequest(views.html.register.render("Registration Issues...", registerForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+            return badRequest(views.html.account_recovery.render("Recovery Issues...", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }
 
-        return ok(views.html.register.render("Registration Success!", registerForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+//        String html = String.format(passwordResetEmail, user.getUserName(), "http://localhost:9000/");
+
+        PasswordRecovery recovery = new PasswordRecovery(user);
+        recovery.save();
+        String html = getRecoveryEmail("http://localhost:9000/recover-password/", recovery);
+
+        MailController mc = new MailController();
+        mc.sendMail("ZAStream Password Recovery", user.getUserName(), email, html);
+        Logger.debug("Sent Password Recovery Email to : "+ user.getUserName());
+        return ok(views.html.account_recovery.render("Recovery Email Sent!", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()) ));
+
     }
 
+    public Result newPassword(String recoveryHash){
+        passwordRecoveryForm = formFactory.form(PasswordRecoveryForm.class);
+        if(PasswordRecovery.findByHash(recoveryHash) == null){ // bad recovery key
+            return badRequest(views.html.account_recovery.render("Invalid Recovery Key!", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+        }
 
-    /**
-     * The controller for the Sign In Page view
-     *
-     * <p>
-     * Called from <code>GET /login</code>
-     * </p>
-     *
-     * @return <code>HTTP OK</code> status with login form.
-     */
-    public Result loginPage(){
-        loginForm = formFactory.form(LoginForm.class);
-        return ok(login.render("Sign In", loginForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+//        PasswordRecoveryForm form = new PasswordRecoveryForm();
+//        form.setEmail(recoveryHash);
+
+        return ok(views.html.account_recovery.render("Reset Your Password", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
-    /**
-     * The controller for authenticating users.
-     * <p>
-     * Called from <code>POST /login</code>
-     * </p>
-     *
-     * <p>
-     * If successful, user will be authenticated to the site, otherwise,
-     * they will be alerted to the issues in their input.
-     * </p>
-     *
-     * @return <code>badRequest</code> if there were errors authenticating, <code>redirect</code> to Homepage if good.
-     */
-    public Result authenticate(){
+    public Result changePassword(String recoveryHash){
+
+        Logger.info("changePassword. recoveryHash: "+ recoveryHash);
+
         DynamicForm dynForm = Form.form().bindFromRequest();
-        loginForm = formFactory.form(LoginForm.class);
-        String user = dynForm.get("userName");
-        String pass = dynForm.get("passWord");
+        passwordRecoveryForm = formFactory.form(PasswordRecoveryForm.class);
 
-        if(User.isValid(user, pass)){
-            Secured.authenticateUser(ctx(), user);
-            return redirect(routes.HomeController.index());
+        String newPassword = dynForm.get("newPassWord");
+        String confirmPassword = dynForm.get("confirmPassword");
+        String hash = dynForm.get("email"); //using email as a placeholder for the reset hash.
 
-        }else if(!User.isUser(user)){//not a user
-            loginForm.reject("userName", "Invalid Username");
-            flash("userName",user);
-            return badRequest(views.html.login.render("Invalid Username", loginForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
-        }else{//bad password
-            loginForm.reject("passWord", "Invalid Password");
-            return badRequest(views.html.login.render("Invalid Password", loginForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+        Logger.info("Hash: "+ hash);
+
+        if(!newPassword.equals(confirmPassword)){
+            ValidationError error = new ValidationError("passwordInvalid", "Passwords Did Not Match. Try again!");
+            passwordRecoveryForm.reject(error);
+            return badRequest(views.html.account_recovery.render("Reset Your Password", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }
+
+
+
+        return ok(views.html.account_recovery.render("Reset Your Password - Password Changed Successfully", passwordRecoveryForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
-    /**
-     * Logs the user out of their current session.
-     * -Removes local session data.
-     * <p>
-     *     Called from <code>GET /logout</code>
-     * </p>
-     * @return <code>redirect</code> user to Homepage.
-     */
-    @Security.Authenticated(Secured.class)
-    public Result logout(){
-        session().clear();
-        return redirect(routes.HomeController.index());
-    }
-
-    public String getRegistrationEmail(User newUser){
-        String userName = newUser.getUserName();
-        String streamKey = Channel.findChannel(newUser).getStreamKey();
-
-        String registrationEmail = "<!doctype html>\n" +
+    private String getRecoveryEmail(String link, PasswordRecovery recovery){
+        String passwordResetEmail = "<!doctype html>\n" +
                 "<html>\n" +
                 "  <head>\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width\" />\n" +
@@ -443,8 +379,7 @@ public class AuthenticationController extends Controller {
                 "        img.full {\n" +
                 "               width:50%;\n" +
                 "               height:auto;\n" +
-                "        }"+
-                "\n" +
+                "        }\n" +
                 "    </style>\n" +
                 "  </head>\n" +
                 "  <body class=\"\">\n" +
@@ -455,7 +390,7 @@ public class AuthenticationController extends Controller {
                 "          <div class=\"content\">\n" +
                 "\n" +
                 "            <!-- START CENTERED WHITE CONTAINER -->\n" +
-                "            <span class=\"preheader\">Welcome to ZAStream!</span>\n" +
+                "            <span class=\"preheader\">ZAStream Account - Password Reset</span>\n" +
                 "            <table class=\"main\">\n" +
                 "\n" +
                 "              <!-- START MAIN CONTENT AREA -->\n" +
@@ -465,43 +400,20 @@ public class AuthenticationController extends Controller {
                 "                    <tr>\n" +
                 "                      <td>\n" +
                 "                        <img src=\"http://zastream.com/assets/big-logo.png\" class=\"full\"/>\n" +
-                "                        <h2>Hi "+userName+",</h2>\n" +
-                "                        <p>Welcome to ZAStream! A new live video streaming website built for professionals, teachers, gamers, and everyone in-between.</p>\n" +
+                "                        <hr/>\n" +
+                "                        <h2>Hi "+ recovery.getUserToRecover().getUserName()+",</h2>\n" +
+                "                        <p>We have received a request to reset your password. Please <a href=\""+link + recovery.getRecoveryHash()+"\">click here to confirm the reset</a> to choose a new password. <br/>Otherwise, you can ignore this email.</p>\n" +
                 "\n" +
-                "                        <p>Want to get started Streaming Today but aren't sure how? Check out the link below to see how to use our favorite streaming software (OBS) (it's free!).</p>\n" +
+                "                        <p>Please note that this link will expire in <b>2 hours</b>.</p>\n" +
                 "\n" +
-                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"btn btn-primary\">\n" +
-                "                          <tbody>\n" +
-                "                            <tr>\n" +
-                "                              <td align=\"center\">\n" +
-                "                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
-                "                                  <tbody>\n" +
-                "                                    <tr>\n" +
-                "                                      <td> <a href=\"https://obsproject.com/forum/resources/obs-classic-official-overview-guide.6/\" target=\"_blank\">Open Broadcaster Software</a> </td>\n" +
-                "                                    </tr>\n" +
-                "                                  </tbody>\n" +
-                "                                </table>\n" +
-                "                              </td>\n" +
-                "                            </tr>\n" +
-                "                          </tbody>\n" +
-                "                        </table>\n" +
-                "\n" +
-                "                        <p>Already an Experienced Streamer? Configure your stream with the following settings: </p>\n" +
-                "\n" +
-                "                        <p class=\"monospace\">\n" +
-                "                          Stream Type: <span class=\"highlight\">Custom Streaming Server</span> <br/>\n" +
-                "                          URL: <span class=\"highlight\">rtmp://dev.zastream.com/live</span> <br/>\n" +
-                "                          Stream Key: <span class=\"highlight\">"+streamKey+"</span> <br/>\n" +
-                "                        </p>\n" +
-                "\n" +
-                "                        <p>We really appreciate you testing our website and would love any feedback. Please send any comments, questions, or concerns to <a href=\"mailto: support@zastream.com\">support@zastream.com</a>.</p>\n" +
-                "\n" +
-                "                        <p>Once again, thanks for using ZAStream. We hope you enjoy your experience</p>\n" +
+                "                        <br/>\n" +
                 "\n" +
                 "                        <p>\n" +
                 "                          Thanks,<br/>\n" +
                 "                          ZAStream Team\n" +
                 "                        </p>\n" +
+                "\n" +
+                "                        <p><small>If you have any comments, questions, or concerns, please send them to <a href=\"mailto: support@zastream.com\">support@zastream.com</a>.</small></p>\n" +
                 "                      </td>\n" +
                 "                    </tr>\n" +
                 "                  </table>\n" +
@@ -532,6 +444,9 @@ public class AuthenticationController extends Controller {
                 "  </body>\n" +
                 "</html>\n";
 
-        return registrationEmail;
+        return passwordResetEmail;
     }
+
+
+
 }

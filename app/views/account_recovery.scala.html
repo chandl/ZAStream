@@ -1,0 +1,133 @@
+@import views.formdata.PasswordRecoveryForm
+@(title: String,
+recoveryForm: Form[views.formdata.PasswordRecoveryForm],isLoggedIn: Boolean, userInfo: User)
+
+@import assets.constant.Constants
+
+
+@main(title, isLoggedIn, userInfo) {
+
+<link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
+
+<div class="log">
+
+    @if(title.contains("Reset Your Password")){
+
+        @if(title.contains("Password Changed Successfully!")){
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#RecoverySuccess").modal('show');
+                $('#RecoverySuccess').on('hidden.bs.modal', function (e) {
+                    window.location = "@routes.HomeController.index()"
+                })
+            });
+        </script>
+        }
+    
+        <div class="content2">
+            <h3>Recover your Password</h3>
+            <p class="small-text">Enter and confirm a new password for your account.</p>
+    
+            @if(recoveryForm.hasErrors) {
+                @if(recoveryForm.error("passwordInvalid") != null) {
+                    <p class="errormsg">Make sure the paswords is same!</p>
+                }
+            }
+
+            <form method="post" action="@routes.AccountRecoveryController.changePassword(" +@request.uri+ ")">
+                <input type="password" name="newPassWord" required placeholder="New Password" />
+                <input type="password" name="confirmPassWord" required placeholder="Confirm Password" />
+
+                <input type="submit" class="register" value="Confirm" />
+            </form>
+        </div>
+    
+        <p class="text-center"><a href="@routes.AuthenticationController.registerPage()">Need an Account? Click Here!</a></p>
+    
+        <div class="clear"></div>
+        <div class="modal fade" id="RecoverSuccess" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Password Changed!</h4>
+                </div>
+                <div class="modal-content">
+                    Your password has been successfully changed. You will now be redirected to log in again.
+                </div>
+            </div>
+        </div>
+    }else{
+        @if(title.contains("Recovery Email Sent!")){
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#RecoverySend").modal('show');
+                    $('#RecoverySend').on('hidden.bs.modal', function (e) {
+                        window.location = "@routes.HomeController.index()"
+                    })
+                });
+            </script>
+        }
+
+        @if(title.contains("Invalid Recovery Key!")){
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#BadKey").modal('show');
+                    $('#BadKey').on('hidden.bs.modal', function (e) {
+                        window.location = "@routes.AccountRecoveryController.recoveryPage()"
+                    })
+                });
+            </script>
+        }
+
+        <div class="content2">
+            <h3>Recover your Password</h3>
+            <p class="small-text">Enter the email associated with your account to receive a password reset email. </p>
+    
+            @if(recoveryForm.hasErrors) {
+                @if(recoveryForm.error("emailInvalid") != null) {
+                    <p class="errormsg">The email address is invalid!</p>
+                }
+            }
+
+            <form method="post" action="@routes.AccountRecoveryController.sendRecovery()">
+                @if(flash.containsKey("email")) {
+                    <input type="email" name="email" value="@flash.get("email")" required placeholder="Your Email"><br><br>
+                }else{
+                    <input type="email" name="email" required placeholder="Your Email"><br><br>
+                }
+                <input type="submit" class="register" value="Confirm" />
+            </form>
+        </div>
+    
+        <p class="text-center"><a href="@routes.AuthenticationController.registerPage()">Need an Account? Click Here!</a></p>
+    
+        <div class="clear"></div>
+        <div class="modal fade" id="RecoverySend" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">An Email Has Been Sent!</h4>
+                </div>
+                <div class="modal-content">
+                    A verification email is on its way to your inbox! Please go check at your email and click the link in the email to reset your password!
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="BadKey" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Invalid Reset Key!</h4>
+                </div>
+                <div class="modal-content">
+                    Sorry, this Password Reset key is expired or invalid. Please enter your ZAStream email again to receive a new password recovery link.
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+}

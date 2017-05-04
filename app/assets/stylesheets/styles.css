@@ -496,3 +496,7 @@ img::-moz-selection {
     color: #fff;
     background: 0 0;
 }
+
+.small-text{
+    font-size:0.9em;
+}
