@@ -5,6 +5,9 @@ import play.Logger;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +31,17 @@ public class PasswordRecovery extends Model{
         }
 
         recoveryHash = key;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.HOUR_OF_DAY, 2);
+        Date date = cal.getTime();
+
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        Time time = new Time(date.getTime());
+
+        expireDate = sqlDate;
+        expireTime = time;
     }
 
     @Id
@@ -43,6 +57,12 @@ public class PasswordRecovery extends Model{
     @Constraints.Required
     @Column(name="userToRecover")
     public User userToRecover;
+
+    @Column(name="expireDate")
+    public java.sql.Date expireDate;
+
+    @Column(name="expireTime")
+    public Time expireTime;
 
     public static Finder find = new Finder(Integer.class, PasswordRecovery.class);
 
@@ -64,6 +84,36 @@ public class PasswordRecovery extends Model{
         this.recoveryId = recoveryId;
     }
 
+    public boolean isExpired(){
+        Date currentDate = new Date();
+        Date sqlExpireDate = new Date(expireDate.getTime());
+
+        //Create calendar with Expire Date
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sqlExpireDate);
+
+        //Create calendar with Expire Time
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(expireTime);
+
+        //Set the correct time in the Calendar with the correct Expire date.
+        cal.set(Calendar.MINUTE, cal1.get(Calendar.MINUTE));
+        cal.set(Calendar.SECOND, cal1.get(Calendar.SECOND));
+        cal.set(Calendar.HOUR_OF_DAY, cal1.get(Calendar.HOUR_OF_DAY));
+
+        //Update the expire date with the first calendar. (Now it contains date AND time)
+        sqlExpireDate = cal.getTime();
+
+        if(currentDate.after(sqlExpireDate)){
+            Logger.debug(String.format("Password Recovery Expired. %s. RecoveryHash: %s. Expire Time: %s %s", getUserToRecover(), getRecoveryHash(), getExpireDate().toString() , getExpireTime().toString()));
+
+            this.delete(); //delete PasswordRecovery entry from the database.
+            return true;
+        }
+
+        return false;
+    }
+
     public String getRecoveryHash() {
         return recoveryHash;
     }
@@ -78,5 +128,21 @@ public class PasswordRecovery extends Model{
 
     public void setUserToRecover(User userToRecover) {
         this.userToRecover = userToRecover;
+    }
+
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(java.sql.Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
+    public Time getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Time expireTime) {
+        this.expireTime = expireTime;
     }
 }

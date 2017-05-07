@@ -26,7 +26,7 @@ POST    /feedback               controllers.FeedbackController.sendFeedBack
 GET     /logout                 controllers.AuthenticationController.logout
 
 #Password Recovery:
-GET     /recover-password       controllers.AccountRecoveryController.recoveryPage
+GET     /recover-password/      controllers.AccountRecoveryController.recoveryPage
 GET     /recover-password/:recoveryHash controllers.AccountRecoveryController.newPassword(recoveryHash: String)
 POST    /recover-password/       controllers.AccountRecoveryController.sendRecovery
 POST    /recover-password/:recoveryHash controllers.AccountRecoveryController.changePassword(recoveryHash: String)

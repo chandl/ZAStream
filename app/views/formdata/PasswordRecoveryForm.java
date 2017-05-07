@@ -2,6 +2,8 @@ package views.formdata;
 
 import play.data.validation.Constraints;
 
+import javax.validation.constraints.Size;
+
 /**
  * Created by yiweizheng on 5/3/17.
  */
@@ -10,9 +12,11 @@ public class PasswordRecoveryForm {
     protected String email;
 
     @Constraints.Required
+    @Size(min=6, max=64)
     protected String newPassword;
 
     @Constraints.Required
+    @Size(min=6, max=64)
     protected String confirmPassword;
 
 

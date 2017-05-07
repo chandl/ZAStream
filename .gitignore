@@ -4,6 +4,7 @@ libexec/*
 *.idea/
 *.iml
 
+conf/evolutions/*
 
 # general
 *~

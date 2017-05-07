@@ -1,51 +1,21 @@
-@import views.formdata.PasswordRecoveryForm
 @(title: String,
 recoveryForm: Form[views.formdata.PasswordRecoveryForm],isLoggedIn: Boolean, userInfo: User)
-
-@import assets.constant.Constants
-
 
 @main(title, isLoggedIn, userInfo) {
 
 <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
 
 <div class="log">
-
-    @if(title.contains("Reset Your Password")){
-
-        @if(title.contains("Password Changed Successfully!")){
+    @if(title.contains("Password Changed Successfully")){
         <script type="text/javascript">
-            $(document).ready(function(){
-                $("#RecoverySuccess").modal('show');
-                $('#RecoverySuccess').on('hidden.bs.modal', function (e) {
-                    window.location = "@routes.HomeController.index()"
-                })
-            });
+                $(document).ready(function(){
+                    $("#RecoverySuccess").modal('show');
+                    $('#RecoverySuccess').on('hidden.bs.modal', function (e) {
+                        window.location = "@routes.AuthenticationController.loginPage()"
+                    })
+                });
         </script>
-        }
-    
-        <div class="content2">
-            <h3>Recover your Password</h3>
-            <p class="small-text">Enter and confirm a new password for your account.</p>
-    
-            @if(recoveryForm.hasErrors) {
-                @if(recoveryForm.error("passwordInvalid") != null) {
-                    <p class="errormsg">Make sure the paswords is same!</p>
-                }
-            }
-
-            <form method="post" action="@routes.AccountRecoveryController.changePassword(" +@request.uri+ ")">
-                <input type="password" name="newPassWord" required placeholder="New Password" />
-                <input type="password" name="confirmPassWord" required placeholder="Confirm Password" />
-
-                <input type="submit" class="register" value="Confirm" />
-            </form>
-        </div>
-    
-        <p class="text-center"><a href="@routes.AuthenticationController.registerPage()">Need an Account? Click Here!</a></p>
-    
-        <div class="clear"></div>
-        <div class="modal fade" id="RecoverSuccess" tabindex="-1" role="dialog">
+        <div class="modal fade" id="RecoverySuccess" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -56,6 +26,33 @@ recoveryForm: Form[views.formdata.PasswordRecoveryForm],isLoggedIn: Boolean, use
                 </div>
             </div>
         </div>
+    }
+
+    @if(title.contains("Reset Your Password")){
+        <div class="content2">
+            <h3>Recover your Password</h3>
+            <p class="small-text">Enter and confirm a new password for your account.</p>
+    
+            @if(recoveryForm.hasErrors) {
+                @if(recoveryForm.error("passwordInvalid") != null) {
+                    <p class="errormsg">Make sure the paswords are the same!</p>
+                }
+                @if(recoveryForm.error("passwordLengthInvalid") != null) {
+                    <p class="errormsg">Make sure the length of the password is between 6 and 64 characters!</p>
+                }
+            }
+
+            <form method="post" action="@routes.AccountRecoveryController.changePassword(""+request.uri.substring(request.uri.lastIndexOf('/')+1, request.uri.length))">
+                <input type="password" name="newPassWord" required placeholder="New Password" />
+                <input type="password" name="confirmPassword" required placeholder="Confirm Password" />
+
+                <input type="submit" class="register" value="Confirm" />
+            </form>
+        </div>
+    
+        <p class="text-center"><a href="@routes.AuthenticationController.registerPage()">Need an Account? Click Here!</a></p>
+    
+        <div class="clear"></div>
     }else{
         @if(title.contains("Recovery Email Sent!")){
             <script type="text/javascript">
@@ -109,7 +106,7 @@ recoveryForm: Form[views.formdata.PasswordRecoveryForm],isLoggedIn: Boolean, use
                     <h4 class="modal-title">An Email Has Been Sent!</h4>
                 </div>
                 <div class="modal-content">
-                    A verification email is on its way to your inbox! Please go check at your email and click the link in the email to reset your password!
+                    A verification email is on its way to your inbox! Please go check your email and click the link in the email to reset your password!
                 </div>
             </div>
         </div>
@@ -125,7 +122,6 @@ recoveryForm: Form[views.formdata.PasswordRecoveryForm],isLoggedIn: Boolean, use
                 </div>
             </div>
         </div>
-
     }
 
 </div>
