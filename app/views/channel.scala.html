@@ -11,70 +11,117 @@
 
     <script src="/assets/javascripts/videojs-brand.min.js"></script>
 
+    @*If the person accessing the page is the page's owner*@
+    @if(isLoggedIn && userInfo.getUserName == stream){
 
 
-    <section class="bg-primary" id="one">
-            <div class="container">
-                @if(!Channel.isStreaming(key)){
-                    <div class="row">
-                        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                            <h1 text-align='center'>@stream</h1>
-                            <video autoplay id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
-                                <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
-                            </video>
+        <div id="broadcaster-sidebar" class="sidenav">
+            <h2>Broadcaster Dashboard</h2>
+            <hr/>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <h3>View Stream Key</h3>
+            <button id="viewStreamKey" onclick="toggleStreamKey()">Show</button>
+            <span id="streamKey" style="display: none;" class="streamKey">KEY</span>
+            <hr/>
+            <h3>Reset Stream Key</h3>
+            <button id="resetStreamKey" onclick="">Reset</button>
+            <hr/>
+            <h3>Channel Title</h3>
+            <input id="newTitle" type="text" placeholder="Title" />
+            <button id="changeTitle" onclick="">Change</button>
+            <hr/>
+        </div>
+
+        <span class="sidebar-open" id="sidebar-open" onclick="openNav()">dashboard &#9776;</span>
 
 
-
-                            <p class="view-stats">
-                                Current Viewers: <span id="viewCount">0</span>
-                                Total Views: <span id="totalCount">@views</span>
-                            </p>
-
-
-                        </div>
-                    </div>
-                }else{
-                    <div class="row">
-                        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                            <h2 id="sorry">Sorry, @stream is not streaming right now.</h2>
-                        </div>
-                    </div>
+        <script>
+                function openNav() {
+                    document.getElementById("broadcaster-sidebar").style.width = "250px";
+                    document.getElementById("sidebar-open").style.visibility = "hidden";
                 }
 
+                function closeNav() {
+                    document.getElementById("broadcaster-sidebar").style.width = "0";
+                    document.getElementById("sidebar-open").style.visibility = "visible";
+                }
+                function toggleStreamKey(){
+                    var x = document.getElementById("streamKey");
 
-            </div>
-        </section>
+                    if(x.style.display === 'none'){
+                        x.style.display = 'block';
+                        document.getElementById("viewStreamKey").innerText = "Hide";
+                    }else{
+                        x.style.display = 'none';
+                        document.getElementById("viewStreamKey").innerText = "Show";
+                    }
 
-        @if(isLoggedIn){
-            <section class="no-padding" id="two">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                            <div id="wrapper">
-                                <div id="menu">
-                                    <p class="welcome">Welcome, @userInfo.userName<b></b></p>
-                                    <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
-                                    <div style="clear:both"></div>
-                                </div>
+                }
 
-                                <div id="chatbox">
+        </script>
 
+    }
 
+    <section class="bg-primary" id="one">
+        <div class="container">
+        @if(!Channel.isStreaming(key)){
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
+                    <h1 text-align='center'>@stream</h1>
+                    <video autoplay id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
+                        <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
+                    </video>
 
-                                </div>
+                    <p class="view-stats">
+                        Current Viewers: <span id="viewCount">0</span>
+                        Total Views: <span id="totalCount">@views</span>
+                    </p>
 
-
-                                <input name="usermsg" type="text" id="usermsg" size="63" />
-                                <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
-
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
-
-            </section>
+            </div>
+        }else{
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
+                    <h2 id="sorry">Sorry, @stream is not streaming right now.</h2>
+                </div>
+            </div>
         }
+
+
+        </div>
+    </section>
+
+    @if(isLoggedIn){
+        <section class="no-padding" id="two">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
+                        <div id="wrapper">
+                            <div id="menu">
+                                <p class="welcome">Welcome, @userInfo.userName<b></b></p>
+                                <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+                                <div style="clear:both"></div>
+                            </div>
+
+                            <div id="chatbox">
+
+
+
+                            </div>
+
+                            <input name="usermsg" type="text" id="usermsg" size="63" />
+                            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    }
+
 
     @if(!Channel.isStreaming(key)) {
         <script>
