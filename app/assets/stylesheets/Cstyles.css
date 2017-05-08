@@ -125,7 +125,6 @@ a {
 
 /*Sidebar Styles*/
 .sidenav {
-    height: 100%;
     width: 0;
     position: fixed;
     z-index: 1;
@@ -135,7 +134,7 @@ a {
     /*background-color: #111;*/
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
+    padding: 15px 0;
 }
 
 .sidenav a, h3 {
@@ -226,9 +225,10 @@ span.streamKey{
     clear:both;
     width:75%;
     height:25px;
-    line-height: 2em;
+    line-height: 1.5em;
     margin:10px auto 0 auto;
     color:white;
+    font-size:1.3em;
     border:1px solid white;
     -webkit-border-radius:4px;
     -moz-border-radius:4px;
