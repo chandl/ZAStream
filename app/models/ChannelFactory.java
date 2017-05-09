@@ -30,7 +30,7 @@ public class ChannelFactory {
      *
      * @return a unique, random, 16-digit alphanumeric stream key.
      */
-    private static String randomStreamKey(){
+    public static String randomStreamKey(){
         String key;
         do{
             key = UUID.randomUUID().toString();

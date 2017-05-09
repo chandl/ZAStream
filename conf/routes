@@ -33,13 +33,16 @@ POST    /recover-password/:recoveryHash controllers.AccountRecoveryController.ch
 
 #View Streams
 GET     /viewCount.js   controllers.ChannelController.webSocketViewCount(name: String)
-#GET     /viewCountInterface     controllers.ChannelController.viewCountInterface()
 GET     /viewCount/:channel  controllers.ChannelController.viewCountInterface(channel: String)
+GET     /reset-streamkey/:channel        controllers.ChannelController.changeStreamKey(channel:String)
 
+
+#Chat Websocket Stuff
 GET     /chat.js        controllers.ChatController.webSocketChannelChat(name: String, userId: Integer)
 GET     /chat/:channel  controllers.ChatController.chatInterface(channel: String)
 
 GET     /gchat          controllers.ChatController.generalChat
 GET     /gchat.js       controllers.ChatController.webSocketGeneralChat(userId: Integer)
 
-GET     /:name           controllers.ChannelController.show(name: String)
+#Channels
+GET     /:name           controllers.ChannelController.show(name)

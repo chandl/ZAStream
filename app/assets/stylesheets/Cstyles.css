@@ -170,6 +170,12 @@ a {
     color: white;
     font-size: 1.5em;
 }
+div.sidenav button a {
+  padding: 0;
+  font-size: 1em;
+  color:white;
+
+}
 button#viewStreamKey{
     padding:5px;
     background-color:#4C9A39;
@@ -192,6 +198,42 @@ button#resetStreamKey{
     margin-top:2%;
     text-transform:uppercase;
     border-radius:4px;
+}
+
+p#warning{
+    border:1px solid;
+    color:white;
+    font-weight: 700;
+    font-size: 1.15em;
+    line-height: 1.35em;
+    border-radius: 5px;
+    border-color: #9a4c39;
+    padding: 10px;
+    margin: 10px 5px;
+}
+
+button#confirmChange{
+    padding:5px;
+    background-color: #5ab445;
+    width:25%;
+    border:none;
+    cursor:pointer;
+    color:#fff;
+    margin-top:2%;
+    text-transform:uppercase;
+    border-radius:2px;
+}
+
+button#denyChange{
+    padding:5px;
+    background-color: #ca5d49;
+    width:25%;
+    border:none;
+    cursor:pointer;
+    color:#fff;
+    margin-top:2%;
+    text-transform:uppercase;
+    border-radius:2px;
 }
 
 button#changeTitle{
@@ -251,6 +293,35 @@ span.streamKey::selection{
     .sidebar-open{
         top: 60px;
     }
+}
+
+.modal-header{
+    background-color: #282828;
+    color: white;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+.modal-title{
+    font-size: 1.5em;
+    font-weight: 700;
+}
+.modal-header button{
+    color:white;
+}
+
+.modal-content{
+    background-color: #282828;
+    color: white;
+    padding: 5%;
+    border: 1px solid black;
+    line-height: 1.3em;
+    font-size: 1.15em;
+}
+.modal{
+    text-align: center;
+    font-weight:700;
+    background-color: rgba(0,0,0, 0.6);
+    padding-top: 10%;
 }
 
 
