@@ -38,6 +38,10 @@ public class Channel extends Model{
     @Size(min=16, max=16)
     public String streamKey;
 
+    @Column(name="channelTitle")
+    @Size(min=3, max=64)
+    public String channelTitle;
+
     @OneToOne
     @JoinColumn(name="roomID")
     public ChatRoom chatRoom;
@@ -61,6 +65,7 @@ public class Channel extends Model{
         this.owner = owner;
         this.currentViewers = 0;
         this.totalViews = 0;
+        this.channelTitle = owner.getUserName();
     }
 
     /**
@@ -173,5 +178,13 @@ public class Channel extends Model{
 //            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
             return theChannel.get(0);
         }
+    }
+
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+
+    public void setChannelTitle(String channelTitle) {
+        this.channelTitle = channelTitle;
     }
 }

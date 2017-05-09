@@ -1,6 +1,5 @@
 package controllers;
 
-import controllers.*;
 import helper.Secured;
 import models.Channel;
 import models.ChannelFactory;
@@ -48,15 +47,15 @@ public class ChannelController extends Controller {
         return ok(views.html.channel.render(name, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), key, totalViews));
     }
 
-    public Result webSocketViewCount(String stream){
-        return ok(views.js.viewCount.render(stream));
+    public Result webSocketChannel(String stream){
+        return ok(views.js.channelWS.render(stream));
     }
 
     public LegacyWebSocket<String> viewCountInterface(String channel){
         return new LegacyWebSocket<String>() {
             @Override
             public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                ViewCountController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
+                ChannelWSController.start(in,out, Channel.findChannel(User.findByUsername(channel)));
             }
         };
     }

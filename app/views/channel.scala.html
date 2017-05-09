@@ -14,17 +14,15 @@
     @*If the person accessing the page is the page's owner*@
     @if(isLoggedIn && userInfo.getUserName == stream){
 
-
         <div id="broadcaster-sidebar" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             
             <h2>Broadcaster Dashboard</h2>
             <hr/>
             <h3>Channel Title</h3>
-            <input id="newTitle" type="text" placeholder="Title" />
-            <button id="changeTitle" onclick="">Change</button>
+            <input id="newTitle" onkeydown="limit(this);" onkeyup="limit(this);" type="text" placeholder="Title" />
+            <button id="changeTitle" onclick="updateTitle()">Change</button>
             <hr/>
-
 
             <h3>View Stream Key</h3>
             <button id="viewStreamKey" onclick="toggleStreamKey()">Show</button>
@@ -32,11 +30,10 @@
             <hr/>
 
             <h3>Reset Stream Key</h3>
-            @*<button id="resetStreamKey"><a id="resetStreamKey" href="@routes.ChannelController.changeStreamKey(stream)">Reset</a></button>*@
             <button id="resetStreamKey" onclick="toggleConfirm()">Reset</button>
             <div id="confirmStreamKeyReset" style="display: none;">
 
-                    <p id="warning">WARNING: Changing your stream key will cause your stream to end. You will need to re-configure your streaming software with the new key. Please restart broadcasting after changing it.</p>
+                <p id="warning">WARNING: Changing your stream key will cause your stream to end. You will need to re-configure your streaming software with the new key.</p>
 
                 <button id="confirmChange"><a id="resetStreamKey" href="@routes.ChannelController.changeStreamKey(stream)">Change</a></button>
                 <button id="denyChange" onclick="toggleConfirm()">Cancel</button>
@@ -49,16 +46,35 @@
 
 
         <script type="text/javascript">
+                function updateTitle(){
+                    var title = document.getElementById("newTitle").value;
+
+                    getSocket().send(@userInfo.getUserId+"\n"+title);
+
+                    $("#newTitle").val('');
+                }
+
                 function toggleConfirm(){
                     var x = document.getElementById("confirmStreamKeyReset");
+                    var button = document.getElementById("resetStreamKey");
 
                     if(x.style.display === 'none'){
                         x.style.display = 'block';
+                        button.style.display = "none";
                     }else{
                         x.style.display = 'none';
+                        button.style.display = "inline";
                     }
                 }
-                
+
+                function limit(element) {
+                    var max_chars = 64;
+
+                    if(element.value.length > max_chars) {
+                        element.value = element.value.substr(0, max_chars);
+                    }
+                }
+
                 function openNav() {
                     document.getElementById("broadcaster-sidebar").style.width = "250px";
                     document.getElementById("sidebar-open").style.visibility = "hidden";
@@ -112,7 +128,7 @@
         @if(!Channel.isStreaming(key)){
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                    <h1 text-align='center'>@stream</h1>
+                    <h1 id="stream-title" text-align='center'>@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
                     <video autoplay id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
                         <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
                     </video>
@@ -182,7 +198,7 @@
         </script>
     }
 
-   <script src="@routes.ChannelController.webSocketViewCount(stream)" type="text/javascript"></script>
+    <script src="@routes.ChannelController.webSocketChannel(stream)" type="text/javascript"></script>
     @if(isLoggedIn) {
         <script src="@routes.ChatController.webSocketChannelChat(stream, userInfo.userId)" type="text/javascript"></script>
     }
