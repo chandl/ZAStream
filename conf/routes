@@ -32,8 +32,8 @@ POST    /recover-password/       controllers.AccountRecoveryController.sendRecov
 POST    /recover-password/:recoveryHash controllers.AccountRecoveryController.changePassword(recoveryHash: String)
 
 #View Streams
-GET     /viewCount.js   controllers.ChannelController.webSocketViewCount(name: String)
-GET     /viewCount/:channel  controllers.ChannelController.viewCountInterface(channel: String)
+GET     /channelWS.js   controllers.ChannelController.webSocketChannel(name: String)
+GET     /channelWS/:channel  controllers.ChannelController.viewCountInterface(channel: String)
 GET     /reset-streamkey/:channel        controllers.ChannelController.changeStreamKey(channel:String)
 
 
