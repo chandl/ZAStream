@@ -16,26 +16,49 @@
 
 
         <div id="broadcaster-sidebar" class="sidenav">
-            <h2>Broadcaster Dashboard</h2>
-            <hr/>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <h3>View Stream Key</h3>
-            <button id="viewStreamKey" onclick="toggleStreamKey()">Show</button>
-            <span id="streamKey" style="display: none;" class="streamKey">@userInfo.getUserChannel().getStreamKey()</span>
-            <hr/>
-            <h3>Reset Stream Key</h3>
-            <button id="resetStreamKey" onclick="">Reset</button>
+            
+            <h2>Broadcaster Dashboard</h2>
             <hr/>
             <h3>Channel Title</h3>
             <input id="newTitle" type="text" placeholder="Title" />
             <button id="changeTitle" onclick="">Change</button>
+            <hr/>
+
+
+            <h3>View Stream Key</h3>
+            <button id="viewStreamKey" onclick="toggleStreamKey()">Show</button>
+            <span id="streamKey" style="display: none;" class="streamKey">@userInfo.getUserChannel().getStreamKey()</span>
+            <hr/>
+
+            <h3>Reset Stream Key</h3>
+            @*<button id="resetStreamKey"><a id="resetStreamKey" href="@routes.ChannelController.changeStreamKey(stream)">Reset</a></button>*@
+            <button id="resetStreamKey" onclick="toggleConfirm()">Reset</button>
+            <div id="confirmStreamKeyReset" style="display: none;">
+
+                    <p id="warning">WARNING: Changing your stream key will cause your stream to end. You will need to re-configure your streaming software with the new key. Please restart broadcasting after changing it.</p>
+
+                <button id="confirmChange"><a id="resetStreamKey" href="@routes.ChannelController.changeStreamKey(stream)">Change</a></button>
+                <button id="denyChange" onclick="toggleConfirm()">Cancel</button>
+            </div>
+            
             <hr/>
         </div>
 
         <span class="sidebar-open" id="sidebar-open" onclick="openNav()">dashboard &#9776;</span>
 
 
-        <script>
+        <script type="text/javascript">
+                function toggleConfirm(){
+                    var x = document.getElementById("confirmStreamKeyReset");
+
+                    if(x.style.display === 'none'){
+                        x.style.display = 'block';
+                    }else{
+                        x.style.display = 'none';
+                    }
+                }
+                
                 function openNav() {
                     document.getElementById("broadcaster-sidebar").style.width = "250px";
                     document.getElementById("sidebar-open").style.visibility = "hidden";
@@ -59,6 +82,28 @@
                 }
 
         </script>
+
+        @if(flash.containsKey("streamKeyChanged")) {
+            <script type="text/javascript">
+                    $(document).ready(function(){
+                        $("#changeStreamKeySuccess").modal('show');
+
+                    });
+            </script>
+        }
+
+        <div class="modal fade" id="changeStreamKeySuccess" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Stream Key Changed Successfully!</h4>
+                </div>
+                <div class="modal-content">
+                    Your stream key was just changed! You will need to re-configure your streaming software and re-start your stream.
+                    To view your new stream key, access the broadcaster dashboard on your channel page.
+                </div>
+            </div>
+        </div>
 
     }
 

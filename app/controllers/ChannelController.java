@@ -1,8 +1,11 @@
 package controllers;
 
+import controllers.*;
 import helper.Secured;
 import models.Channel;
+import models.ChannelFactory;
 import models.User;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.LegacyWebSocket;
 import play.mvc.Result;
@@ -57,5 +60,27 @@ public class ChannelController extends Controller {
             }
         };
     }
+
+    public Result changeStreamKey (String channelName){
+        User user = Secured.getUserInfo(ctx());
+
+        User owner =  User.findByUsername(channelName);
+
+        if(user.equals(owner)) {
+            Channel channel = Channel.findChannel(owner);
+
+            String newKey = ChannelFactory.randomStreamKey();
+            Logger.debug(String.format("The original stream key is : %s", channel.getStreamKey()));
+            channel.setStreamKey(newKey);
+
+            channel.save();
+            Logger.debug(String.format("The stream key in the channel: %s is changed to new key : %s", channel.getOwner(), channel.getStreamKey()));
+        }
+
+        flash("streamKeyChanged", "streamKeyChanged");
+        return redirect(controllers.routes.ChannelController.show(channelName));
+    }
+
+
 
 }
