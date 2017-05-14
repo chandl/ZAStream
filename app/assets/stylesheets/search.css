@@ -1,0 +1,24 @@
+@media(min-width:768px) {
+    .container{
+        margin-top:150px;
+    }
+}
+@media(max-width:768px) {
+    .container{
+        margin-top:70px;
+    }
+}
+
+.item{
+    border: 1px solid black;
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+    border-radius:8px;
+    padding: 30px;
+
+    margin: 5px;
+}
+
+.item p{
+    line-height: 1em;
+}

@@ -41,6 +41,14 @@
                 <div class="navbar-collapse collapse" id="bs-navbar">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
+                           <div class="search">
+                            <form>
+                                <input class="searchBar" type="text" name="search" placeholder="Search..">
+                                <button class="searchButton">Search</button>
+                            </form>
+                           </div>
+                        </li>
+                        <li>
                             @if(isLoggedIn){
                                 <a class="page-scroll logout" title="Logged in" href="@routes.AuthenticationController.logout()">Hi, @userInfo.getUserName(). Logout</a>
                             }else{
