@@ -105,7 +105,7 @@ public class Channel extends Model{
     }
 
     public void setCurrentViewers(int currentViewers) {
-        if(currentViewers > 0)
+        if(currentViewers >= 0)
             this.currentViewers = currentViewers;
     }
 
