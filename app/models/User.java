@@ -192,6 +192,11 @@ public class User extends Model{
         return(users.size() == 0)? null:users.get(0);
     }
 
+    public static List<User> findUsers(String query){
+        List<User> users = find.where().like("userName", "%"+query+"%").findList();
+
+        return users;
+    }
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

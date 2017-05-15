@@ -7,46 +7,35 @@
 
   <div class="container">
 
-      <h2>Search results for '@query': </h2>
-    @for(result <- results){
-
-    }
+      @if(results.size() == 0){
+          <h2>No results for '@query'.</h2>
+      }else{
+          <h2>Search results for '@query': </h2>
+      }
     <div class="row">
-      <div class="col-xs-12 col-sm-6 col-md-4">
-          <div class="item">
-              <p class="channelName">Channel</p>
-              <p class="isActive">Not Live</p>
-              <p class="channelType">Public</p>
-              <p class="totalViews">1000</p>
-              <p class="currentViews">0</p>
-          </div>
-      </div>
+       @for(result <- results){
+           <div class="col-xs-12 col-sm-6 col-md-4">
+               <div class="item">
+                   <h3 class="broadcastTitle"><a href="@routes.ChannelController.show(result.getOwner().getUserName())">@result.getChannelTitle()</a></h3>
+                   <h4 class="channelName">User: @result.getOwner().getUserName()</h4>
+                   <hr/>
+                   @if(result.getChannelType == "PUB"){
+                       <p class="desc channelType">Type: <span>Public</span></p>
+                   }else{
+                       <p class="desc channelType">Type: <span>Private</span></p>
+                   }
 
-        <div class="col-xs-12 col-sm-6 col-md-4">
-            <div class="item">
-                sldjflkasjdlkfjlkasdf
-            </div>
-        </div><div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="item">
-            sldjflkasjdlkfjlkasdf
-        </div>
-    </div><div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="item">
-            sldjflkasjdlkfjlkasdf
-        </div>
-    </div><div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="item">
-            sldjflkasjdlkfjlkasdf
-        </div>
-    </div><div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="item">
-            sldjflkasjdlkfjlkasdf
-        </div>
-    </div><div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="item">
-            sldjflkasjdlkfjlkasdf
-        </div>
-    </div>
+                   @if(Channel.isStreaming(result.getStreamKey())){
+                       <p class="desc live isActive">Status: <span>Live</span></p>
+                   }else{
+                       <p class="desc notLive isActive">Status: <span>Not Live</span></p>
+                   }
+
+                   <p class="desc totalViews">Total Views: <span>@result.getTotalViews()</span></p>
+                   <p class="desc currentViews">Current Viewers: <span>@result.getCurrentViewers()</span></p>
+               </div>
+           </div>
+       }
 
     </div>
 

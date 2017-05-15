@@ -6,6 +6,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
+import play.mvc.Controller;
 import play.mvc.Result;
 import views.formdata.FeedbackForm;
 import views.html.feedback;
@@ -16,11 +17,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static play.mvc.Controller.flash;
-import static play.mvc.Http.Context.Implicit.ctx;
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.ok;
-
 /**
  * FeedbackController: Controller to handle the Feedback page.
  *
@@ -29,7 +25,7 @@ import static play.mvc.Results.ok;
  * @version 2.0
  * @since 2.0
  */
-public class FeedbackController {
+public class FeedbackController extends Controller{
 
     @Inject FormFactory formFactory;
     Form<FeedbackForm> feedbackForm;

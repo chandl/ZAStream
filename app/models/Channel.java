@@ -180,6 +180,12 @@ public class Channel extends Model{
         }
     }
 
+    public static List<Channel> findChannels(String query){
+        List<Channel> channels = find.where().like("channelTitle", "%"+query+"%").findList();
+
+        return channels;
+    }
+
     public String getChannelTitle() {
         return channelTitle;
     }
