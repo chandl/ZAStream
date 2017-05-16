@@ -41,6 +41,15 @@
                 <div class="navbar-collapse collapse" id="bs-navbar">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
+                           <div class="search">
+                            <form action="javascript:search()">
+                                <input class="searchBar" type="text" id="searchInput" name="search" placeholder="Search...">
+                                <button class="searchButton">Search</button>
+                            </form>
+                           </div>
+                        </li>
+
+                        <li>
                             @if(isLoggedIn){
                                 <a class="page-scroll logout" title="Logged in" href="@routes.AuthenticationController.logout()">Hi, @userInfo.getUserName(). Logout</a>
                             }else{
@@ -48,6 +57,7 @@
                             }
 
                         </li>
+
                     </ul>
                 </div>
             </div>
@@ -68,7 +78,7 @@
             </div>
         </footer>
 
-
+        <script src="/assets/javascripts/search.js"></script>
         <script src="/assets/javascripts/bootstrap.min.js"></script>
         <script src="/assets/javascripts/wow.js"></script>
         <script src="/assets/javascripts/scripts.js"></script>

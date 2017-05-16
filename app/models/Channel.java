@@ -105,7 +105,7 @@ public class Channel extends Model{
     }
 
     public void setCurrentViewers(int currentViewers) {
-        if(currentViewers > 0)
+        if(currentViewers >= 0)
             this.currentViewers = currentViewers;
     }
 
@@ -178,6 +178,12 @@ public class Channel extends Model{
 //            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
             return theChannel.get(0);
         }
+    }
+
+    public static List<Channel> findChannels(String query){
+        List<Channel> channels = find.where().like("channelTitle", "%"+query+"%").findList();
+
+        return channels;
     }
 
     public String getChannelTitle() {
