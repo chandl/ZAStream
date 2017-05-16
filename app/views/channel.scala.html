@@ -184,7 +184,7 @@
     }
 
 
-    @if(!Channel.isStreaming(key)) {
+    @if(Channel.isStreaming(key)) {
         <script>
                 var player = videojs('#player', {
                     fluid: true
