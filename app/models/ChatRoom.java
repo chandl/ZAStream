@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="chatRoom")
+@Table(name="chatroom")
 public class ChatRoom extends Model{
 
     public ChatRoom(Channel channel) {

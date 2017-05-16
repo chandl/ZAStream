@@ -125,7 +125,7 @@
 
     <section class="bg-primary" id="one">
         <div class="container">
-        @if(!Channel.isStreaming(key)){
+        @if(Channel.isStreaming(key)){
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
                     <h1 id="stream-title" text-align='center'>@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
