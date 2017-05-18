@@ -1,14 +1,21 @@
 package controllers;
 
+import helper.HashHelper;
 import helper.Secured;
 import models.Channel;
 import models.ChannelFactory;
 import models.User;
 import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.LegacyWebSocket;
 import play.mvc.Result;
 import play.mvc.WebSocket;
+import views.formdata.PrivateChannelForm;
+
+import javax.inject.Inject;
 
 
 /**
@@ -20,6 +27,10 @@ import play.mvc.WebSocket;
  * @since 1.0
  */
 public class ChannelController extends Controller {
+
+    @Inject
+    FormFactory formFactory;
+    Form<PrivateChannelForm> pcForm;
 
     /**
      * Controller method to show a channel page.
@@ -36,6 +47,16 @@ public class ChannelController extends Controller {
         User u = User.findByUsername(name);
         Channel c = Channel.findChannel(u);
 
+        // Channel is not public - redirect to password page.
+        //      Don't redirect if they previously authenticated or are the channel owner.
+        if(!Secured.isLoggedIn(ctx()) || !Secured.getUserInfo(ctx()).getUserName().equals(name)){
+            if((!Secured.checkIfAuthenticatedToChannel(ctx(), c ) && !c.isPublic())) {
+                pcForm = formFactory.form(PrivateChannelForm.class);
+                return ok(views.html.private_channel.render(name, pcForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+            }
+        }
+
+
         if(!Secured.checkIfViewedChannel(ctx(), c)){
             c.setTotalViews(c.getTotalViews() + 1);
             Secured.addViewedChannel(ctx(), c);
@@ -45,6 +66,36 @@ public class ChannelController extends Controller {
         String key = c.getStreamKey();
 
         return ok(views.html.channel.render(name, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), key, totalViews));
+    }
+
+    //Called when POSTing
+    public Result showPrivate(String channel){
+
+        User u = User.findByUsername(channel);
+        Channel c = Channel.findChannel(u);
+
+        //User already authenticated OR they are channel owner
+        if(Secured.checkIfAuthenticatedToChannel(ctx(), c) || (Secured.isLoggedIn(ctx()) && Secured.getUserInfo(ctx()).getUserName().equals(channel))){
+            return redirect(routes.ChannelController.show(channel));
+        }
+
+
+        DynamicForm dynform = Form.form().bindFromRequest();
+        pcForm = formFactory.form(PrivateChannelForm.class);
+        String pw = dynform.get("channelPassword");
+
+        if(!checkChannelPassword(c, pw)){ // Bad Password
+            pcForm.reject("badPassword" , "Invalid Channel Password Entered!");
+            return badRequest(views.html.private_channel.render(channel, pcForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
+        }else{
+            Secured.addAuthenticatedChannel(ctx(), c);
+            return redirect(routes.ChannelController.show(channel));
+        }
+
+    }
+
+    public boolean checkChannelPassword(Channel channel, String pw){
+        return HashHelper.checkPassword(pw, channel.getChannelPassword());
     }
 
     public Result webSocketChannel(String stream){

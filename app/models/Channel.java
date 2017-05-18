@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 import play.Logger;
+import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -33,6 +34,9 @@ public class Channel extends Model{
     @Column(name="channelType")
     @Size(max=3, min=3)
     public String channelType = "PUB";
+
+    @Column(name="channelPassword")
+    public String channelPassword;
 
     @Column(name="streamKey")
     @Size(min=16, max=16)
@@ -66,6 +70,7 @@ public class Channel extends Model{
         this.currentViewers = 0;
         this.totalViews = 0;
         this.channelTitle = owner.getUserName();
+        this.channelPassword = null;
     }
 
     /**
@@ -148,7 +153,15 @@ public class Channel extends Model{
     public void setOwner(User owner) {
         this.owner = owner;
     }
-    //====================END Getters and Setters====================
+
+    public String getChannelPassword() {
+        return channelPassword;
+    }
+
+    public void setChannelPassword(String channelPassword) {
+        this.channelPassword = channelPassword;
+    }
+//====================END Getters and Setters====================
 
     @Override
     public String toString() {
@@ -193,4 +206,10 @@ public class Channel extends Model{
     public void setChannelTitle(String channelTitle) {
         this.channelTitle = channelTitle;
     }
+
+    public boolean isPublic(){
+        return channelType.equals("PUB");
+    }
+
+
 }

@@ -1,6 +1,6 @@
 package controllers;
 
-import helper.Secured;
+import helper.HashHelper;
 import models.Channel;
 import models.User;
 import play.Logger;
@@ -33,28 +33,61 @@ public class ChannelWSController {
             public void accept(String s) {
                 String[] info = s.split("\n");
                 if(info.length < 1){
-                    Logger.info("Bad Input ChannelWSController : " + s);
+                    Logger.error("Bad Input ChannelWSController : " + s);
                     return ;
                 }
 
-                int userId = Integer.parseInt(info[0]);
+                //Contains user ID and message type
+                String[] msgType = info[0].split(",");
+                if(msgType.length < 1){
+                    Logger.error("Bad Input ChannelWSController : " + s);
+                    return ;
+                }
+
+                int userId = Integer.parseInt(msgType[0]);
                 User user = User.findById(userId);
                 Channel channel = Channel.findChannel(user);
-                channel.setChannelTitle(info[1]);
 
-                channel.save();
-
-                notifyAllTitleChange(channel, info[1]);
+                switch(msgType[1]){
+                       case "T":
+                           updateTitle(channel, info[1]);
+                           break;
+                       case "P":
+                           updateChannelPassword(channel, info[1]);
+                        break;
+                }
             }
         });
         in.onClose(() -> ChannelWSController.decreaseCount(channel, out));
+    }
+
+    public static void updateChannelPassword(Channel c, String pw){
+        if(pw == null || pw.equals(" ")){
+            c.setChannelPassword(null);
+            c.setChannelType("PUB");
+            c.save();
+            Logger.debug(String.format("[%s] is now [PUB]", c.getOwner().getUserName()));
+        }else{
+            String hashedPw = HashHelper.createPassword(pw);
+            c.setChannelPassword(hashedPw);
+            c.setChannelType("PRI");
+            c.save();
+            Logger.debug(String.format("[%s] is now [PRI]", c.getOwner().getUserName()));
+        }
+    }
+
+    public static void updateTitle(Channel c, String title){
+        c.setChannelTitle(title);
+        c.save();
+        Logger.debug(String.format("[%s] set title to [%s]", c.getOwner().getUserName(), title));
+        notifyAllTitleChange(c, title);
     }
 
     public static void increaseCount(Channel channel){
         channel.setCurrentViewers(connections.get(channel.getChannelID()).size());
         channel.save();
         notifyAllViewCount(channel, channel.getCurrentViewers());
-        Logger.debug("Someone Connected to " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
+        Logger.debug("New connection to " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
     }
 
     public static void decreaseCount(Channel channel, WebSocket.Out<String> conn){
@@ -62,7 +95,7 @@ public class ChannelWSController {
         channel.setCurrentViewers(connections.get(channel.getChannelID()).size());
         channel.save();
         notifyAllViewCount(channel, channel.getCurrentViewers());
-        Logger.debug("Someone Disconnected from " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
+        Logger.debug("Disconnection from " + channel.getOwner().getUserName() + "'s channel. Current Viewers: "+ channel.getCurrentViewers());
     }
 
     public static void notifyAllViewCount(Channel channel, int viewCount){

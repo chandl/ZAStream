@@ -86,6 +86,24 @@ public class Secured extends Security.Authenticator {
 
     }
 
+    public static void addAuthenticatedChannel(Http.Context ctx, Channel channel){
+        response().setCookie("auth-"+channel.getChannelID(), Crypto.crypto().sign(channel.getChannelPassword()), 7200);
+    }
+
+    public static boolean checkIfAuthenticatedToChannel(Http.Context ctx, Channel channel){
+        Http.Cookie cookie = request().cookie("auth-"+channel.getChannelID());
+
+        if(cookie!= null){
+            if(!cookie.value().equals(Crypto.crypto().sign(channel.getChannelPassword()))) { //matches!
+                addAuthenticatedChannel(ctx, channel); //update cookie again
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     /**
      * Gets the {@link User} model for the currently authenticated user.
      *

@@ -236,7 +236,7 @@ button#denyChange{
     border-radius:2px;
 }
 
-button#changeTitle{
+button#changeTitle, #setPrivacy{
     padding:5px;
     background-color: #394c9a;
     width:50%;
@@ -248,7 +248,7 @@ button#changeTitle{
     border-radius:4px;
 }
 
-input#newTitle{
+input#newTitle, #channelPassword{
     padding:5px 5px;
     width:80%;
     border:1px solid white;
@@ -322,6 +322,14 @@ span.streamKey::selection{
     font-weight:700;
     background-color: rgba(0,0,0, 0.6);
     padding-top: 10%;
+}
+
+
+#error{
+    color:white;
+    font-size: 0.9em;
+    font-family: monospace;
+    background-color: rgba(255,40,40,0.8);
 }
 
 
