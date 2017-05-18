@@ -46,5 +46,9 @@ GET     /chat/:channel  controllers.ChatController.chatInterface(channel: String
 GET     /gchat          controllers.ChatController.generalChat
 GET     /gchat.js       controllers.ChatController.webSocketGeneralChat(userId: Integer)
 
+#Private Channels
+GET      /private/:name  controllers.ChannelController.showPrivate(name)
+POST     /private/:name  controllers.ChannelController.showPrivate(name)
+
 #Channels
 GET     /:name           controllers.ChannelController.show(name)

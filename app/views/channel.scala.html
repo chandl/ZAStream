@@ -40,16 +40,65 @@
             </div>
             
             <hr/>
+            <h3>Channel Privacy</h3>
+
+            @if(Channel.findChannel(User.findByUsername(stream)).isPublic){
+                <input id="channelPassword" style="display: inline;" onkeydown="limit(this);" onkeyup="limit(this);" type="text" placeholder="Channel Password" />
+                <p id="error" style="display: none;"></p>
+                <button id="setPrivacy" onclick="updateChannelPassword()">Make Private</button>
+            }else{
+                <input id="channelPassword" style="display: none;" onkeydown="limit(this);" onkeyup="limit(this);" type="text" placeholder="Channel Password" />
+                <p id="error" style="display: none;"></p>
+                <button id="setPrivacy" onclick="updateChannelPassword()">Make Public</button>
+            }
+
+            <hr/>
         </div>
 
         <span class="sidebar-open" id="sidebar-open" onclick="openNav()">dashboard &#9776;</span>
 
 
         <script type="text/javascript">
+                function isGoodInput(pw){
+                    if(pw.length < 3 || pw.length > 64 ){
+                        document.getElementById("error").innerHTML = "Password Length must be between 3-64 characters.";
+                        document.getElementById("error").style.display = "block";
+                        return false;
+                    }
+                    return true;
+                }
+
+
+                function updateChannelPassword(){
+                    var input = document.getElementById("channelPassword");
+                    var privacyButton = document.getElementById("setPrivacy");
+
+                    var pw;
+                    if($("#channelPassword").css('display') === 'none'){
+                       pw = " ";
+                       input.style.display = "inline";
+                       privacyButton.innerHTML = 'Make Private';
+                    }else{
+                        pw = document.getElementById("channelPassword").value;
+                        if(isGoodInput(pw)){
+                            input.style.display = "none";
+                            document.getElementById("error").style.display="none";
+                            privacyButton.innerHTML = 'Make Public';
+                        }else{
+                            return;
+                        }
+
+                    }
+
+                    getSocket().send(@userInfo.getUserId()+",P\n"+pw);
+
+                    $("#channelPassword").val('');
+                }
+
                 function updateTitle(){
                     var title = document.getElementById("newTitle").value;
 
-                    getSocket().send(@userInfo.getUserId+"\n"+title);
+                    getSocket().send(@userInfo.getUserId+",T\n"+title);
 
                     $("#newTitle").val('');
                 }
@@ -125,7 +174,7 @@
 
     <section class="bg-primary" id="one">
         <div class="container">
-        @if(Channel.isStreaming(key)){
+        @if(!Channel.isStreaming(key)){
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
                     <h1 id="stream-title" text-align='center'>@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
@@ -184,7 +233,7 @@
     }
 
 
-    @if(Channel.isStreaming(key)) {
+    @if(!Channel.isStreaming(key)) {
         <script>
                 var player = videojs('#player', {
                     fluid: true
