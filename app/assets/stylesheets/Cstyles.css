@@ -5,7 +5,7 @@ h1{
     text-align: center;
     padding-top: 30%;
 }
-section.main-body{
+.main-body{
   margin-top: 7%;
 }
 
@@ -112,6 +112,42 @@ a:hover { text-decoration:underline; }
     border-radius: 10px;
 }
 
+.user-list-header{
+    /*background-color:#222;*/
+    color:black;
+    /*margin-bottom: 10px;*/
+}
+
+.user-list{
+    border:1px solid #8b27b0;
+    line-height: 1.5em;
+    font-size: 1.3em;
+    padding: 15px 0;
+    background-color:#eee;
+    color:black;
+    border-radius: 10px;
+    max-height: 450px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.user-list hr{
+    border-color: saddlebrown;
+}
+
+.user-list ul{
+    list-style-position: outside;
+    padding-left: 0;
+}
+
+.user-list li{
+    list-style: none;
+}
+
+.user-list a{
+    text-align: center;
+    color:saddlebrown;
+}
 
 #chatbox {
     text-align:left;
@@ -362,9 +398,9 @@ span.streamKey::selection{
         top: 60px;
     }
     #wrapper {
-        margin-top: 5%;
         min-height: 450px;
     }
+
 }
 
 @media(max-width: 480px){
