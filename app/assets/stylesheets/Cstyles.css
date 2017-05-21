@@ -32,13 +32,34 @@ body {
     }
 
 .view-stats{
-    margin:0 auto;
-
-    width: inherit;
-    background-size: auto;
-    display: inline;
-    text-align: center;
+    margin:0 auto 15px auto;
+    width: 100%;
+    height:35px;
+    border-radius: 0 0 4px 4px;
+    background-color:#222;
+    padding:5px;
 }
+
+.view-stats p{
+    font-size: 1.25em;
+    position:relative;
+    display:inline;
+}
+
+.view-stats #username{
+    margin-left: 1%;
+    float:left;
+}
+.view-stats #current-views, #total-views{
+    float:right;
+}
+.view-stats #current-views{
+    margin-right: 2%;
+}
+.view-stats #total{
+    margin-right: 1%;
+}
+
 .view-stats span{
     margin:0;
     padding:0;
@@ -51,10 +72,6 @@ form, p, span {
     margin:0;
     padding:0; }
 
-.video-player{
-  margin-left: auto;
-  margin-right: auto;
-}
 @media(min-width:768px) {
     .navbar {
         min-height: 95px !important;
@@ -69,9 +86,17 @@ input { font:12px arial; }
 
 a {
     color:#0000FF;
-    text-decoration:none; }
+    text-decoration:none;
+}
 
-    a:hover { text-decoration:underline; }
+a:hover { text-decoration:underline; }
+
+#stream-title{
+    text-align: left;
+    margin: 3% 0 1% 1%;
+}
+
+
 
 #wrapper {
     margin:0 auto;

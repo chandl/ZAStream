@@ -15,7 +15,9 @@
         <div class="container-fluid">
         @if(!Channel.isStreaming(key)){
             <div class="row">
+                <div class="container-fluid">
                 <h1 id="stream-title">@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
+                </div>
             </div>
             <div class="row">
 
@@ -25,10 +27,12 @@
                         <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
                     </video>
 
-                    <p class="view-stats">
-                        Current Viewers: <span id="viewCount">0</span>
-                        Total Views: <span id="totalCount">@views</span>
-                    </p>
+                    <div class="view-stats">
+                        <p id="username">Channel: @stream</p>
+                        <p id="total-views">Total Views: <span id="totalCount">@views</span></p>
+                        <p id="current-views">Watching Now: <span id="viewCount">0</span></p>
+                    </div>
+
                 </div>
 
                 @*Chat Box*@
