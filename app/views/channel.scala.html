@@ -5,18 +5,17 @@
 
         <link type="text/css" rel="stylesheet" href="/assets/stylesheets/Cstyles.css" />
         <link href="//vjs.zencdn.net/5.8/video-js.min.css" rel="stylesheet" />
-        @*<link href="/assets/stylesheets/videojs-errors.css" type="text/css" rel="stylesheet" />*@
         <script src="//vjs.zencdn.net/5.8/video.min.js"></script>
         <script src="/assets/javascripts/videojs-contrib-hls.min.js"></script>
+        <script src="/assets/javascripts/videojs-brand.min.js"></script>
 
-    <script src="/assets/javascripts/videojs-brand.min.js"></script>
 
     @*If the person accessing the page is the page's owner*@
     @if(isLoggedIn && userInfo.getUserName == stream){
 
         <div id="broadcaster-sidebar" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            
+
             <h2>Broadcaster Dashboard</h2>
             <hr/>
             <h3>Channel Title</h3>
@@ -38,7 +37,7 @@
                 <button id="confirmChange"><a id="resetStreamKey" href="@routes.ChannelController.changeStreamKey(stream)">Change</a></button>
                 <button id="denyChange" onclick="toggleConfirm()">Cancel</button>
             </div>
-            
+
             <hr/>
             <h3>Channel Privacy</h3>
 
@@ -75,9 +74,9 @@
 
                     var pw;
                     if($("#channelPassword").css('display') === 'none'){
-                       pw = " ";
-                       input.style.display = "inline";
-                       privacyButton.innerHTML = 'Make Private';
+                        pw = " ";
+                        input.style.display = "inline";
+                        privacyButton.innerHTML = 'Make Private';
                     }else{
                         pw = document.getElementById("channelPassword").value;
                         if(isGoodInput(pw)){
@@ -126,11 +125,15 @@
 
                 function openNav() {
                     document.getElementById("broadcaster-sidebar").style.width = "250px";
+                    document.getElementById("main").style.marginRight = "250px";
+                    document.getElementById("main").style.opacity = "0.3";
                     document.getElementById("sidebar-open").style.visibility = "hidden";
                 }
 
                 function closeNav() {
                     document.getElementById("broadcaster-sidebar").style.width = "0";
+                    document.getElementById("main").style.marginRight = "0";
+                    document.getElementById("main").style.opacity = "1";
                     document.getElementById("sidebar-open").style.visibility = "visible";
                 }
                 function toggleStreamKey(){
@@ -172,23 +175,51 @@
 
     }
 
-    <section class="bg-primary" id="one">
-        <div class="container">
+
+
+    <section class="bg-primary" id="main">
+        <div class="container-fluid">
         @if(!Channel.isStreaming(key)){
             <div class="row">
-                <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                    <h1 id="stream-title" text-align='center'>@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
+                <div class="container-fluid">
+                <h1 id="stream-title">@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
+                </div>
+            </div>
+            <div class="row">
+
+                @*Video Box*@
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                     <video autoplay id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
                         <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
                     </video>
 
-                    <p class="view-stats">
-                        Current Viewers: <span id="viewCount">0</span>
-                        Total Views: <span id="totalCount">@views</span>
-                    </p>
-
+                    <div class="view-stats">
+                        <p id="username">Channel: @stream</p>
+                        <p id="total-views">Total Views: <span id="totalCount">@views</span></p>
+                        <p id="current-views">Watching Now: <span id="viewCount">0</span></p>
+                    </div>
 
                 </div>
+
+                @*Chat Box*@
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                @if(isLoggedIn){
+                    <section class="no-padding" >
+
+                        <div id="wrapper">
+                            <div id="chatbox">
+
+
+
+                            </div>
+                            <input name="usermsg" placeholder="Send a message" type="text" id="usermsg" size="63" />
+                            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+                        </div>
+
+                    </section>
+                }
+                </div>
+
             </div>
         }else{
             <div class="row">
@@ -202,35 +233,7 @@
         </div>
     </section>
 
-    @if(isLoggedIn){
-        <section class="no-padding" id="two">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                        <div id="wrapper">
-                            <div id="menu">
-                                <p class="welcome">Welcome, @userInfo.userName<b></b></p>
-                                <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
-                                <div style="clear:both"></div>
-                            </div>
 
-                            <div id="chatbox">
-
-
-
-                            </div>
-
-                            <input name="usermsg" type="text" id="usermsg" size="63" />
-                            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-    }
 
 
     @if(!Channel.isStreaming(key)) {
