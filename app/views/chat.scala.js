@@ -16,7 +16,7 @@ $(function(){
         var message = msg.message;
 
 
-        $('#chatbox').prepend('<p><small>('+d+')</small>'+sender+': '+ message +'</p>');
+        $('#chatbox').prepend('<p><small>['+d+']</small><span class="chat-user">'+sender+'</span>: <span class="chat-msg">'+ message +'</span></p>');
     }
 
     socket.onmessage = writeMessages;
