@@ -3,35 +3,67 @@
 @main(title, isLoggedIn, userInfo) {
 
   <link type="text/css" rel="stylesheet" href="/assets/stylesheets/Cstyles.css" />
-
+  <div class="main-body">
+  <div class="row">
+    <h2>General Chat Room</h2>
+    <hr/>
+  </div>
 
   @if(isLoggedIn){
-    <section class="no-padding" id="chat">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-            <div id="wrapper">
-              <div id="menu">
-                <p class="welcome">Welcome, @userInfo.userName<b></b></p>
-                <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
-                <div style="clear:both"></div>
-              </div>
 
-              <div id="chatbox">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center user-list">
+              <p class="user-list-header">User List</p>
 
-              </div>
+              <hr/>
 
-              <input name="usermsg" type="text" id="usermsg" size="63" />
-              <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+              <ul>
+                <li class="user-list-user"><a href="#">User 1</a></li>
+                <li class="user-list-user"><a href="#">User 2</a></li>
+                <li class="user-list-user"><a href="#">User 3</a></li>
+                <li class="user-list-user"><a href="#">User 4</a></li>
+                <li class="user-list-user"><a href="#">User 5</a></li>
+                <li class="user-list-user"><a href="#">User 6</a></li>
+                <li class="user-list-user"><a href="#">User 7</a></li>
+                <li class="user-list-user"><a href="#">User 8</a></li>
+                <li class="user-list-user"><a href="#">User 9</a></li>
+                <li class="user-list-user"><a href="#">User 10</a></li>
+                <li class="user-list-user"><a href="#">User 11</a></li>
+                <li class="user-list-user"><a href="#">User 12</a></li>
+                <li class="user-list-user"><a href="#">User 13</a></li>
+                <li class="user-list-user"><a href="#">User 14</a></li>
+                <li class="user-list-user"><a href="#">User 15</a></li>
+                <li class="user-list-user"><a href="#">User 16</a></li>
+                <li class="user-list-user"><a href="#">User 17</a></li>
+                <li class="user-list-user"><a href="#">User 18</a></li>
+                <li class="user-list-user"><a href="#">User 19</a></li>
+                <li class="user-list-user"><a href="#">User 20</a></li>
 
+              </ul>
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 text-center">
+
+              <section class="no-padding" >
+                <div id="wrapper" class="gchat-wrapper">
+                  <div id="chatbox">
+
+
+
+                  </div>
+                  <input name="usermsg" placeholder="Send a message" type="text" id="usermsg" size="63" />
+                  <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+                </div>
+
+              </section>
             </div>
           </div>
+
         </div>
 
-      </div>
-
-    </section>
   }
+  </div>
 
   @if(isLoggedIn){
     <script src="@routes.ChatController.webSocketGeneralChat(userInfo.userId)" type="text/javascript"></script>
