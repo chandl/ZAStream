@@ -31,6 +31,9 @@ body {
     text-align:center;
     }
 
+#main{
+    transition: margin-right 0.5s;
+}
 .view-stats{
     margin:0 auto 15px auto;
     width: 100%;
@@ -191,7 +194,7 @@ a:hover { text-decoration:underline; }
 /*Sidebar Styles*/
 .sidenav {
     width: 0;
-    position: fixed;
+    position: absolute;
     z-index: 1;
     top: 95px;
     right: 0;
@@ -361,6 +364,15 @@ span.streamKey::selection{
     #wrapper {
         margin-top: 5%;
         min-height: 450px;
+    }
+}
+
+@media(max-width: 480px){
+    .sidenav{
+        display:none;
+    }
+    .sidebar-open{
+        display:none;
     }
 }
 
