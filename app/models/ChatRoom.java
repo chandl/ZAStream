@@ -59,4 +59,8 @@ public class ChatRoom extends Model{
     public int getRoomId() {
         return roomId;
     }
+
+    public void addChat(Chat chat){
+        chatMessages.add(chat);
+    }
 }
