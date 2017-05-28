@@ -25,6 +25,7 @@ $(function(){
     var sendMessage = function(message){
         if(message.trim()!='')
         {
+            message = message.replace(/\"/gi, "&#34;");
             socket.send("{\"sender\":\"@userId\", \"message\":\"" + message + "\"}");
         }
     }
