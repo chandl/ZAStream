@@ -8,6 +8,10 @@
         <script src="//vjs.zencdn.net/5.8/video.min.js"></script>
         <script src="/assets/javascripts/videojs-contrib-hls.min.js"></script>
         <script src="/assets/javascripts/videojs-brand.min.js"></script>
+        <link href="/assets/emoji/wdt-emoji-bundle.css" rel="stylesheet"/>
+        <script type="text/javascript" src="/assets/emoji/emoji.min.js"></script>
+        <script type="text/javascript" src="/assets/emoji/wdt-emoji-channel.min.js"></script>
+
 
 
     @*If the person accessing the page is the page's owner*@
@@ -212,12 +216,50 @@
 
 
                             </div>
-                            <input name="usermsg" placeholder="Send a message" type="text" id="usermsg" size="63" />
+                            <input name="usermsg" class="wdt-emoji-bundle-enabled wdt-emoji-open-on-colon usermsg" placeholder="Send a message" type="text" id="usermsg" size="63" />
                             <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
                         </div>
 
                     </section>
                 }
+                </div>
+
+                <div class="wdt-emoji-popup">
+                    <a href="#" class="wdt-emoji-popup-mobile-closer"> × </a>
+                    <div class="wdt-emoji-menu-content">
+                        <div id="wdt-emoji-menu-header">
+                            <a class="wdt-emoji-tab active" data-group-name="Recent"></a>
+                            <a class="wdt-emoji-tab" data-group-name="People"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Nature"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Foods"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Activity"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Places"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Objects"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Symbols"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Flags"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Custom"></a>
+                        </div>
+                        <div class="wdt-emoji-scroll-wrapper">
+                            <div id="wdt-emoji-menu-items">
+                                <input id="wdt-emoji-search" type="text" placeholder="Search">
+                                <h3 id="wdt-emoji-search-result-title">Search Results</h3>
+                                <div class="wdt-emoji-sections"></div>
+                                <div id="wdt-emoji-no-result">No emoji found</div>
+                            </div>
+                        </div>
+                        <div id="wdt-emoji-footer">
+                            <div id="wdt-emoji-preview">
+                                <span id="wdt-emoji-preview-img"></span>
+                                <div id="wdt-emoji-preview-text">
+                                    <span id="wdt-emoji-preview-name"></span><br>
+                                    <span id="wdt-emoji-preview-aliases"></span>
+                                </div>
+                            </div>
+                            <div id="wdt-emoji-preview-bundle">
+                                <span>ZAStream Emojis</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
