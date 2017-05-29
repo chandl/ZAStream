@@ -11,16 +11,7 @@ function updateUserList(users){
     document.getElementById("user-list").innerHTML = "";
 
     for(var i=0; i<list.length; i++){
-        var li = document.createElement("li");
-        li.className = "user-list-user";
-
-        var a = document.createElement("a");
-        a.innerHTML=list[i];
-        a.href="/"+list[i];
-
-        li.appendChild(a);
-
-        document.getElementById("user-list").appendChild(li);
+        userListJoin(list[i]);
     }
 }
 
@@ -51,13 +42,48 @@ function userListLeave(user){
     }
 }
 
+function initEmojis(){
+
+
+    wdtEmojiBundle.defaults.emojiSheets = {
+        'apple'    : '/assets/emoji/sheets/sheet_apple_64_indexed_128.png',
+        'google'   : '/assets/emoji/sheets/sheet_google_64_indexed_128.png',
+        'twitter'  : '/assets/emoji/sheets/sheet_twitter_64_indexed_128.png',
+        'emojione' : '/assets/emoji/sheets/sheet_emojione_64_indexed_128.png',
+        'facebook' : '/assets/emoji/sheets/sheet_facebook_64_indexed_128.png',
+        'messenger': '/assets/emoji/sheets/sheet_messenger_64_indexed_128.png'
+    };
+    wdtEmojiBundle.defaults.type = 'apple';
+
+    wdtEmojiBundle.defaults.pickerColors = [
+      'green', 'pink', 'yellow', 'blue', 'gray'
+    ];
+
+    wdtEmojiBundle.defaults.sectionOrders = {
+        'Recent'  : 10,
+        'Custom'  : 9,
+        'People'  : 8,
+        'Nature'  : 7,
+        'Foods'   : 6,
+        'Activity': 5,
+        'Places'  : 4,
+        'Objects' : 3,
+        'Symbols' : 2,
+        'Flags'   : 1
+    };
+
+    wdtEmojiBundle.init(".usermsg");
+}
+
 $(function(){
+
+    initEmojis();
+
     var WS = window['MozWebSocket'] ? window['MozWebSocket'] : WebSocket;
     var socket = new WS('@routes.ChatController.chatInterface(room).webSocketURL(request)');
 
     var handleMessage = function(event){
         var msg = JSON.parse(event.data);
-        var d = new Date().toTimeString().split(' ')[0];
         var sender = msg.sender;
         var message = msg.message;
 
@@ -90,6 +116,8 @@ $(function(){
         var d = new Date().toTimeString().split(' ')[0];
         var sender = msg.sender;
         var message = msg.message;
+
+        message = wdtEmojiBundle.render(message);
 
 
         $('#chatbox').prepend('<p><small>['+d+']</small><span class="chat-user">'+sender+'</span>: <span class="chat-msg">'+ message +'</span></p>');
