@@ -1,8 +1,9 @@
 @* This is the home page of ZAStream website *@
-@(isLoggedIn: Boolean, userInfo: User)
+@(isLoggedIn: Boolean, userInfo: User, streams: List[Channel])
 
 @main("Home", isLoggedIn, userInfo) {
     <link type="text/css" rel="stylesheet" href="/assets/stylesheets/index.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/stylesheets/featured-streams.css" />
         <header id="first">
             <div class="header-content">
                 <div class="inner">
@@ -38,7 +39,7 @@
             </div>
         </section>
 
-    <!--
+
         <section id="two" class="no-padding">
             <div class="container-fluid">
                 <h2 class="text-center text-primary">Featured Live Streams</h2>
@@ -46,84 +47,47 @@
                 <hr class="primary">
                 <br/>
                 <div class="row no-gutter">
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream1">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>A Streaming Live!</h2>
-                                    </div>
-                                </div>
+
+                    @for(stream <- streams){
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <div class="item">
+                                <h3 class="broadcastTitle"><a href="@routes.ChannelController.show(stream.getOwner().getUserName())">@stream.getChannelTitle()</a></h3>
+                                <h4 class="channelName">User: @stream.getOwner.getUserName()</h4>
+                                <hr/>
+
+                                @if(stream.getChannelType == "PUB"){
+                                    <p class="desc channelType">Type: <span>Public</span></p>
+                                }else{
+                                    <p class="desc channelType">Type: <span>Private</span></p>
+                                }
+
+                                @if(Channel.isStreaming(stream.getOwner.getUserName(), stream.getStreamKey())) {
+                                    <p class="desc live isActive">Status: <span>Live</span></p>
+                                }else{
+                                    <p class="desc notLive isActive">Status: <span>Not Live</span></p>
+
+                                }
+                                <p class="desc totalViews">Total Views: <span>@stream.getTotalViews()</span></p>
+                                <p class="desc currentViews">Current Viewers: <span>@stream.getCurrentViewers()</span></p>
                             </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream2">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>B Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream3">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>C Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                        </div>
+
+                    }
 
 
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream4">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>D Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream5">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>E Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream6">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>F Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+
+
+
                 </div>
+
+
+            </div>
+
+            <div class="text-center call-to-action view-more-streams">
+                <a href="@routes.SearchController.searchPage("")" class="btn btn-default btn-lg wow flipInX">View More</a>
             </div>
         </section>
-        -->
+
 
         <aside class="bg-dark">
             <div class="container text-center">

@@ -35,6 +35,9 @@ public class Channel extends Model{
     @Size(max=3, min=3)
     public String channelType = "PUB";
 
+    @Column(name="channelStatus")
+    public boolean channelStatus = false;
+
     @Column(name="channelPassword")
     public String channelPassword;
 
@@ -71,6 +74,7 @@ public class Channel extends Model{
         this.totalViews = 0;
         this.channelTitle = owner.getUserName();
         this.channelPassword = null;
+        this.channelStatus = false;
     }
 
     /**
@@ -89,10 +93,24 @@ public class Channel extends Model{
         return channels.size() > 0;
     }
 
-    public static boolean isStreaming(String key){
+    public static boolean isStreaming(String channel, String key){
         File streamFile = new File("/HLS/live/"+key+"/index.m3u8");
+        boolean status = false;
 
-        return streamFile.exists();
+        Channel c = Channel.findChannel(User.findByUsername(channel));
+
+        if(streamFile.exists()){
+            status = true;
+            if(!c.isStreaming()){
+                c.setIsStreaming(true);
+                c.save();
+            }
+        }else if (c.isStreaming()){
+            c.setIsStreaming(false);
+            c.save();
+        }
+
+        return status;
     }
 
 
@@ -161,7 +179,16 @@ public class Channel extends Model{
     public void setChannelPassword(String channelPassword) {
         this.channelPassword = channelPassword;
     }
-//====================END Getters and Setters====================
+
+    public boolean isStreaming() {
+        return channelStatus;
+    }
+
+    public void setIsStreaming(boolean channelStatus) {
+        this.channelStatus = channelStatus;
+    }
+
+    //====================END Getters and Setters====================
 
     @Override
     public String toString() {

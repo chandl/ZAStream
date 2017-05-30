@@ -183,7 +183,7 @@
 
     <section class="bg-primary" id="main">
         <div class="container-fluid">
-        @if(!Channel.isStreaming(key)){
+        @if(!Channel.isStreaming(stream, key)){
             <div class="row">
                 <div class="container-fluid">
                 <h1 id="stream-title">@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
@@ -278,7 +278,7 @@
 
 
 
-    @if(!Channel.isStreaming(key)) {
+    @if(!Channel.isStreaming(stream, key)) {
         <script>
                 var player = videojs('#player', {
                     fluid: true

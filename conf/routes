@@ -37,6 +37,7 @@ GET     /channelWS/:channel  controllers.ChannelController.viewCountInterface(ch
 GET     /reset-streamkey/:channel        controllers.ChannelController.changeStreamKey(channel:String)
 
 #Search
+GET     /search/        controllers.SearchController.searchPage(query: String ?= "")
 GET     /search/:query  controllers.SearchController.searchPage(query)
 
 #Chat Websocket Stuff
