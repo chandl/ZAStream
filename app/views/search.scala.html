@@ -25,7 +25,7 @@
                        <p class="desc channelType">Type: <span>Private</span></p>
                    }
 
-                   @if(Channel.isStreaming(result.getStreamKey())){
+                   @if(Channel.isStreaming(result.getOwner.getUserName(), result.getStreamKey())){
                        <p class="desc live isActive">Status: <span>Live</span></p>
                    }else{
                        <p class="desc notLive isActive">Status: <span>Not Live</span></p>

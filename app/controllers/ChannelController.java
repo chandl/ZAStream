@@ -16,6 +16,8 @@ import play.mvc.WebSocket;
 import views.formdata.PrivateChannelForm;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -131,6 +133,38 @@ public class ChannelController extends Controller {
         return redirect(controllers.routes.ChannelController.show(channelName));
     }
 
+    public static ArrayList<Channel> findLiveChannels(){
+        List<Channel> c = Channel.find.where()
+                .eq("channelType", "PUB").and()
+                .eq("channelStatus", true)
+                .orderBy().desc("currentViewers")
+                .orderBy().desc("totalViews")
+                .findList();
 
+
+        ArrayList<Channel> channels = new ArrayList<>();
+        for(int i=0; i<6 && i<c.size(); i++){
+            channels.add(c.get(i));
+        }
+
+        channels.trimToSize();
+
+        return channels;
+    }
+
+    public static ArrayList<Channel> findNonLiveChannels(){
+        List<Channel> c = Channel.find.where()
+                .eq("channelType", "PUB").and()
+                .eq("channelStatus", false)
+                .orderBy().desc("totalViews")
+                .orderBy().desc("currentViewers").findList();
+
+        ArrayList<Channel> channels = new ArrayList<>();
+        for(int i=0; i<6 && i<c.size(); i++){
+            channels.add(c.get(i));
+        }
+
+        return channels;
+    }
 
 }
