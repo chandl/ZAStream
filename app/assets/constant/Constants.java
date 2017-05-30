@@ -13,5 +13,5 @@ public class Constants {
     public static final String PASSWORD_PLACEHOLDER = "Password";
     public static final String EMAIL_PLACEHOLDER = "Email";
 
-    public static final String RECOVERY_LINK = "http://localhost:9000/recover-password/";
+    public static final String RECOVERY_LINK = "https://dev.zastream.com:9000/recover-password/";
 }
