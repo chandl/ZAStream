@@ -193,7 +193,7 @@ public class ChatController extends Controller {
         user.save();
 
         //Create channel
-        Channel c = ChannelFactory.newChannel("PUB", user);
+        Channel c = ChannelFactory.newChannel("PRI", user);
         c.save();
 
         //Create chatroom

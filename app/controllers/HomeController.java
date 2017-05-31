@@ -31,12 +31,11 @@ public class HomeController extends Controller {
 
         if(channels.size() < 6){
             ArrayList<Channel> nonLiveChannels = ChannelController.findNonLiveChannels();
-            for(int i=0; i<6; i++){
-                if(nonLiveChannels.size() > i+1) {
-                    channels.add(nonLiveChannels.get(i));
-                }
 
+            for(int i = channels.size(),  b =0; i < 6; i++ ){
+                channels.add(nonLiveChannels.get(b++));
             }
+
         }
 
         return ok(index.render(Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), channels));

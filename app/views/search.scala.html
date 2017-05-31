@@ -5,13 +5,17 @@
   <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
   <link rel='stylesheet' type='text/css' href='/assets/stylesheets/search.css'>
 
-  <div class="container">
-
-      @if(results.size() == 0){
-          <h2>No results for '@query'.</h2>
+  <div class="container search-container">
+      @if(query == ""){
+          <h2>All Channels</h2>
       }else{
-          <h2>Search results for '@query': </h2>
+          @if(results.size() == 0){
+              <h2>No results for '@query'.</h2>
+          }else{
+              <h2>Search results for '@query': </h2>
+          }
       }
+
     <div class="row">
        @for(result <- results){
            <div class="col-xs-12 col-sm-6 col-md-4">
