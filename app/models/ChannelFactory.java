@@ -3,8 +3,8 @@ import java.util.UUID;
 
 /**
  * Channel Factory - Create New {@link Channel}s w/ the Factory Design Pattern
- * @author Chandler Severson <seversonc@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @version 2.0
  * @since 1.0
  *
  */

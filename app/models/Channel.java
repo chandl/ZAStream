@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Channel: Data Model + Helper Methods for Channels
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 @Entity

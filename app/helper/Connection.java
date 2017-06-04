@@ -4,7 +4,12 @@ import models.User;
 import play.mvc.WebSocket;
 
 /**
- * Created by chandler on 5/28/17.
+ * Connection: Helper Class to keep track of {@link WebSocket} connections.
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
  */
 public class Connection<T> {
 

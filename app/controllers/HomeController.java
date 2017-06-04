@@ -13,16 +13,16 @@ import java.util.Set;
 /**
  * HomeController: Controller to handle the Homepage.
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 public class HomeController extends Controller {
 
 
     /**
-     * Controller method to display the HomePage.
+     * Controller method to display the HomePage and Featured Streams.
      *
      * @return <code>HTTP OK</code> result, rendering the Homepage.
      */

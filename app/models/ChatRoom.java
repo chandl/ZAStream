@@ -6,6 +6,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ChatRoom: Model for Chat Rooms
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
+ */
 @Entity
 @Table(name="chatroom")
 public class ChatRoom extends Model{

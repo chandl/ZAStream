@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * ChannelController: Controller to handle Channels & routing the proper stream.
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 public class ChannelController extends Controller {
@@ -70,7 +70,14 @@ public class ChannelController extends Controller {
         return ok(views.html.channel.render(name, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), key, totalViews));
     }
 
-    //Called when POSTing
+    /**
+     * Controller method to show a private channel page.
+     *
+     * Checks if user is authenticated to a channel & checks the entered password.
+     *
+     * @param channel The Username of the owner of the {@link Channel} that the user is connecting to.
+     * @return {@code badRequest} if the invalid password is entered, {@code redirect} to the channel page if the password is correct.
+     */
     public Result showPrivate(String channel){
 
         User u = User.findByUsername(channel);
@@ -86,7 +93,7 @@ public class ChannelController extends Controller {
         pcForm = formFactory.form(PrivateChannelForm.class);
         String pw = dynform.get("channelPassword");
 
-        if(!checkChannelPassword(c, pw)){ // Bad Password
+        if(!HashHelper.checkPassword(pw, c.getChannelPassword())){ // Bad Password
             pcForm.reject("badPassword" , "Invalid Channel Password Entered!");
             return badRequest(views.html.private_channel.render(channel, pcForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }else{
@@ -96,14 +103,22 @@ public class ChannelController extends Controller {
 
     }
 
-    public boolean checkChannelPassword(Channel channel, String pw){
-        return HashHelper.checkPassword(pw, channel.getChannelPassword());
-    }
-
+    /**
+     * Reverse Javascript Route to get the channelWS.js rendered properly.
+     *
+     * @param stream The Username of the owner of a {@link Channel}
+     * @return
+     */
     public Result webSocketChannel(String stream){
         return ok(views.js.channelWS.render(stream));
     }
 
+    /**
+     * Controller to create a Channel  WebSocket connection: {@link ChannelWSController}.
+     *
+     * @param channel The Username of the owner of a {@link Channel} to start the viewCount WS Interface.
+     * @return The ViewCount WebSocket interface for the specified channel.
+     */
     public LegacyWebSocket<String> viewCountInterface(String channel){
         return new LegacyWebSocket<String>() {
             @Override
@@ -113,11 +128,20 @@ public class ChannelController extends Controller {
         };
     }
 
+    /**
+     * Controller method to change the stream key.
+     *
+     * Called when {@code POST}ing to {@code /reset-streamkey/:channel}.
+     *
+     * @param channelName The name of the channel to reset the stream key for.
+     * @return {@code HTTP.redirect} back to the channel page.
+     */
     public Result changeStreamKey (String channelName){
         User user = Secured.getUserInfo(ctx());
 
         User owner =  User.findByUsername(channelName);
 
+        //Make sure the requester is the owner of the channel :
         if(user.equals(owner)) {
             Channel channel = Channel.findChannel(owner);
 
@@ -133,7 +157,12 @@ public class ChannelController extends Controller {
         return redirect(controllers.routes.ChannelController.show(channelName));
     }
 
-    public static ArrayList<Channel> findLiveChannels(){
+    /**
+     * Helper method to find all currently Live/Streaming channels.
+     *
+     * @return An ArrayList of the top {@link Channel}s that are currently streaming.
+     */
+    static ArrayList<Channel> findLiveChannels(){
         List<Channel> c = Channel.find.where()
                 .eq("channelType", "PUB").and()
                 .eq("channelStatus", true)
@@ -152,7 +181,12 @@ public class ChannelController extends Controller {
         return channels;
     }
 
-    public static ArrayList<Channel> findNonLiveChannels(){
+    /**
+     * Helper method to find all non-active (not streaming) channels.
+     *
+     * @return An ArrayList of the top {@link Channel}s that are not currently streaming.
+     */
+    static ArrayList<Channel> findNonLiveChannels(){
         List<Channel> c = Channel.find.where()
                 .eq("channelType", "PUB").and()
                 .eq("channelStatus", false)

@@ -11,9 +11,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * SearchController: Controller to handle the search system.
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
+ */
+
 public class SearchController extends Controller {
 
-
+    /**
+     * Controller method to show the Search Page based on a query.
+     * @param query The search term to look up.
+     *
+     * @return {@code HTTP.ok} of the search.html with search results.
+     */
     public Result searchPage(String query){
         Set<Channel> channels = new HashSet<Channel>();
 

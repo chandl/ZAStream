@@ -12,25 +12,40 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
+/**
+ * ChatController: Controller to manage the Chat System.
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
+ */
 public class ChatController extends Controller {
     private static Map<Integer, HashSet<Connection<String>>> connections = new HashMap<>();
 
+    /**
+     * Controller method to display the General Chat Room page.
+     *
+     * Called from the {@code GET /gchat} route
+     * 
+     * @return
+     */
     public Result generalChat(){
         return ok(gchat.render("General Chat Room", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
-    public LegacyWebSocket<String> gchatInterface(int chatRoom){
-        User requestingUser = Secured.getUserInfo(ctx());
-
-        return new LegacyWebSocket<String>() {
-            @Override
-            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                ChatController.start(in,out, ChatRoom.findById(chatRoom), requestingUser);
-            }
-        };
-
-    }
-
+    /**
+     * Method to control WebSocket chat connections.
+     *
+     * Keeps track of connections and disconnects, handles messages.
+     * Entry point for new connections.
+     * Update the Chat information to the database.
+     *
+     * @param in The WebSocket Input Stream
+     * @param out The WebSocket Output Stream
+     * @param room The {@link ChatRoom} that the WebSocket should associate with.
+     * @param user The {@link User} that is connecting.
+     */
     public static void start(WebSocket.In<String> in, WebSocket.Out<String> out, ChatRoom room, User user){
         HashSet<Connection<String>> connList;
 
@@ -158,12 +173,25 @@ public class ChatController extends Controller {
         }
     }
 
+    /**
+     * Method that is called when closing a websocket connection.
+     *
+     * @param room The {@link ChatRoom} that the user is in.
+     * @param conn The {@link Connection} that is being closed.
+     */
     public static void close(ChatRoom room, Connection<String> conn){
         sendUserListUpdate(room, false, conn.getConnectedUser().getUserName());
         connections.get(room.getRoomId()).remove(conn);
 //        Logger.info("User Disconnected from Chat: "+ channel);
     }
 
+    /**
+     * Helper method to send a message to everyone in a {@link ChatRoom}.
+     *
+     * @param room The {@link ChatRoom} to send a message to.
+     * @param message The message to send.
+     * @param sender The {@link User} that is sending the message.
+     */
     public static void notifyAll(ChatRoom room, String message, String sender){
         StringBuilder sb = new StringBuilder();
         sb.append("{\"sender\":\"").append(sender).append("\", \"message\":\"").append(message).append("\"}");
@@ -174,6 +202,14 @@ public class ChatController extends Controller {
         }
     }
 
+    /**
+     * Method to send a message to one {@link Connection}.
+     *
+     * @param connection The connection to send a message to.
+     * @param message The message to send.
+     * @param sender  Who sends the message.
+     */
+
     private static void notify(Connection<String> connection, String message, String sender){
         StringBuilder sb = new StringBuilder();
         sb.append("{\"sender\":\"").append(sender).append("\", \"message\":\"").append(message).append("\"}");
@@ -181,22 +217,32 @@ public class ChatController extends Controller {
         connection.getOutputStream().write(sb.toString());
     }
 
-    public boolean doesGChatExist(){
+    /**
+     * Method to check if the General {@link ChatRoom} exist.
+     *
+     * @return {@code false} if General {@link ChatRoom} not exist./
+     */
+    private boolean doesGChatExist(){
         if(ChatRoom.findNumberOfPublicRooms() >= 1) return true;
         else return false;
     }
 
+    /**
+     * Method to create a General {@link ChatRoom}
+     *
+     * @return A {@link Channel} representation for the {@ChatRoom}
+     */
     private Channel createGeneralChat(){
-        //Create user
+        //Create 'gchat' user
         String uuid = UUID.randomUUID().toString();
         User user = new User("gchat", uuid.replaceAll("-",""), "gchat@zastream.com");
         user.save();
 
-        //Create channel
+        //Create channel for 'gchat'
         Channel c = ChannelFactory.newChannel("PRI", user);
         c.save();
 
-        //Create chatroom
+        //Create chatroom for 'gchat'
         ChatRoom room = c.getChatRoom();
         room.setPublic(true);
         room.save();
@@ -204,6 +250,14 @@ public class ChatController extends Controller {
         return c;
     }
 
+    /**
+     * Controller method to get a WebSocket connection for a {@link ChatRoom} in a specific {@link Channel}.
+     *
+     * If the channel is 'gchat', a general chat room will be created if one does not exist.
+     *
+     * @param channel The Username of the owner of a {@link Channel}.
+     * @return A WebSocket connection for chat.
+     */
     public LegacyWebSocket<String> chatInterface(String channel){
         User requestingUser = Secured.getUserInfo(ctx());
 
@@ -229,6 +283,12 @@ public class ChatController extends Controller {
 
     }
 
+    /**
+     * Controller method to handle chat.js for the General Chat. Reverse JS Routing.
+     *
+     * @param userId The {@link User} ID of the requesting user. Used to authenticate the request.
+     * @return A {@code badRequest} if the user cannot be validated, otherwise return {@code ok} the chat.js file.
+     */
     public Result webSocketGeneralChat(int userId){
 
         //Return bad request if user's cookies don't match the user ID passed in.
@@ -239,6 +299,13 @@ public class ChatController extends Controller {
         return ok(views.js.chat.render("gchat", userId));
     }
 
+    /**
+     * Controller method to handle chat.js for any {@link Channel} chat. Reverse JS routing.
+     *
+     * @param stream The Username of the owner of the {@link Channel}.
+     * @param userId The userId of the requesting {@link User}
+     * @return A {@code badRequest} if the user cannot be validated, otherwise return {@code ok} the chat.js file.
+     */
     public Result webSocketChannelChat(String stream, int userId){
 
         //Return bad request if user's cookies don't match the user ID passed in.

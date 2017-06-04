@@ -14,9 +14,9 @@ import static play.mvc.Controller.session;
 /**
  * Secured: Class to handle Authentication and Session Storage
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 public class Secured extends Security.Authenticator {
@@ -62,16 +62,39 @@ public class Secured extends Security.Authenticator {
         return (getName(ctx) != null);
     }
 
+    /**
+     * Method that authenticate by storing the user's userName in their cookies. 
+     * 
+     * @param ctx The HTTP context (User's cookies). 
+     * @param userName The userName of the {@link User} that is being authenticate.
+     */
     public static void authenticateUser(Http.Context ctx, String userName){
         ctx.session().clear();
         ctx.session().put("userName", userName);
         session("userName", userName);
     }
 
+    /**
+     * Method that adds a cookie to the user's session that verifies that
+     * the user has viewed the channel. The cookie expires after 24 hours.
+     * 
+     * This makes sure that the user cannot keep refreshing the page to increase the total view count. 
+     * Used with {@code checkIfViewedChannel}
+     * 
+     * @param ctx The Http.Context of the user.
+     * @param channel The {@link Channel} that the user viewed.  
+     */
     public static void addViewedChannel(Http.Context ctx, Channel channel){
         response().setCookie("viewed-"+channel.getChannelID(), Crypto.crypto().sign(channel.getStreamKey()), 86400);
     }
 
+    /**
+     * Method that checks if a user has already viewed a channel (in the last 24 hours).
+     * 
+     * @param ctx The HTTP context (User's cookies).
+     * @param channel The {@link Channel} that the user viewed.
+     * @return (@code true} if a user is viewed and {code false} if a user is not viewed.
+     */
     public static boolean checkIfViewedChannel(Http.Context ctx, Channel channel){
         Http.Cookie cookie = request().cookie("viewed-"+channel.getChannelID());
 
@@ -86,10 +109,26 @@ public class Secured extends Security.Authenticator {
 
     }
 
+    /**
+     * Method that adds a cookie to a user's session that verifies the user has successfully
+     * entered in a password for a private {@link Channel}. Cookie expires after 2 hours. 
+     *
+     * Used with {@code checkIfAuthenticatedToChannel}.
+     *
+     * @param ctx The Http.Context of the user.
+     * @param channel The private {@link Channel} that the User authenticated to.  
+     */
     public static void addAuthenticatedChannel(Http.Context ctx, Channel channel){
         response().setCookie("auth-"+channel.getChannelID(), Crypto.crypto().sign(channel.getChannelPassword()), 7200);
     }
 
+    /**
+     * Method that checks of a user is authenticated to a private {@link Channel}.
+     * 
+     * @param ctx The Http.Context of the requesting user.
+     * @param channel The private {@link Channel} that the user is requesting to access.
+     * @return {@code true} if the user has previously authenticated to the channel (in the last 2 hours), {@code false} otherwise.
+     */
     public static boolean checkIfAuthenticatedToChannel(Http.Context ctx, Channel channel){
         Http.Cookie cookie = request().cookie("auth-"+channel.getChannelID());
 

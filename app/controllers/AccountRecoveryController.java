@@ -19,7 +19,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * AccountRecoveryController
+ * AccountRecoveryController: Controller to manage Account Recovery
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
+ *
  */
 public class AccountRecoveryController extends Controller {
     @Inject
@@ -498,6 +504,13 @@ public class AccountRecoveryController extends Controller {
         return passwordResetEmail;
     }
 
+    /**
+     * Helper method to create a recovery Success email.
+     *
+     * @param link The link to the recovery page. (E.g. http://localhost:9000/recover-password/)
+     * @param user The {@link User} that was recovered
+     * @return The email in a String
+     */
     private String getRecoverySuccessEmail(String link, User user){
         String successEmail = "<!doctype html>\n" +
                 "<html>\n" +

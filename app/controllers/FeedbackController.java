@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 /**
  * FeedbackController: Controller to handle the Feedback page.
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
+ * @author Chandler Severson
+ * @author Yiwei Zheng
  * @version 2.0
  * @since 2.0
  */
@@ -35,11 +35,20 @@ public class FeedbackController extends Controller{
 
     private static MailController fMail = new MailController();
 
+    /**
+     * Controller method to show the Feedback Page.
+     *
+     * @return {@code HTTP.ok} the Feedback page.
+     */
     public Result feedbackPage(){
         feedbackForm = formFactory.form(FeedbackForm.class);
         return ok(feedback.render("Share Your Thoughts!", feedbackForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
+    /**
+     * Controller method to handle {@code POST}s to {@code /feedback}
+     * @return {@code HTTP.badRequest } if there are validation errors, {@code HTTP.ok} otherwise
+     */
     public Result sendFeedBack () {
         DynamicForm dynform = Form.form().bindFromRequest();
         feedbackForm = formFactory.form(FeedbackForm.class);
@@ -68,7 +77,15 @@ public class FeedbackController extends Controller{
         return ok(views.html.feedback.render("Feedback Submitted!", feedbackForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
     }
 
-    public List<ValidationError> validate(String email, boolean rating){
+    /**
+     * Helper Method to validate the Feedback message.
+     * Validates that the email is valid and that a rating was entered.
+     *
+     * @param email The email to validate.
+     * @param rating If a rating was entered.
+     * @return A List of ValidationErrors that were found while validating the parameters.
+     */
+    private List<ValidationError> validate(String email, boolean rating){
         List<ValidationError> errors = new ArrayList<ValidationError>();
 
         Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
@@ -85,6 +102,9 @@ public class FeedbackController extends Controller{
         return errors.isEmpty()? null : errors;
     }
 
+    /**
+     *  String that formats the Feedback Email from a user.
+     */
     private static final String feedbackTemplate = "<!DOCTYPE html>\n" +
             "<html>\n" +
             "   <head>\n" +
