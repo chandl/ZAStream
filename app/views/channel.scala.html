@@ -4,8 +4,9 @@
 @main(stream, isLoggedIn, userInfo) {
 
         <link type="text/css" rel="stylesheet" href="/assets/stylesheets/Cstyles.css" />
-        <link href="//vjs.zencdn.net/5.8/video-js.min.css" rel="stylesheet" />
-        <script src="//vjs.zencdn.net/5.8/video.min.js"></script>
+        <link href="https://vjs.zencdn.net/5.19.2/video-js.css" rel="stylesheet">
+        <script src="https://vjs.zencdn.net/5.19.2/video.js"></script>
+
         <script src="/assets/javascripts/videojs-contrib-hls.min.js"></script>
         <script src="/assets/javascripts/videojs-brand.min.js"></script>
         <link href="/assets/emoji/wdt-emoji-bundle.css" rel="stylesheet"/>
@@ -183,7 +184,7 @@
 
     <section class="bg-primary" id="main">
         <div class="container-fluid">
-        @if(!Channel.isStreaming(stream, key)){
+        @if(Channel.isStreaming(stream, key)){
             <div class="row">
                 <div class="container-fluid">
                 <h1 id="stream-title">@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
@@ -282,7 +283,7 @@
 
 
 
-    @if(!Channel.isStreaming(stream, key)) {
+    @if(Channel.isStreaming(stream, key)) {
         <script>
                 var player = videojs('#player', {
                     fluid: true
