@@ -1,4 +1,4 @@
-@* This is the home page of ZAStream website *@
+@import assets.constant.Constants
 @(isLoggedIn: Boolean, userInfo: User, streams: List[Channel])
 
 @main("Home", isLoggedIn, userInfo) {
@@ -73,13 +73,7 @@
                         </div>
 
                     }
-
-
-
-
-
                 </div>
-
 
             </div>
 
@@ -90,21 +84,69 @@
 
 
         <aside class="bg-dark">
+
             <div class="container text-center">
                 <div class="call-to-action">
-                    <h2 class="text-primary">Get Started!</h2>
+                    @if(isLoggedIn){
+                        <h2 class="text-primary">Broadcaster Tutorial:</h2>
 
-                    <p>
-                        Here at ZAStream, we recommend the free Open Broadcaster Software to stream video from your computer, but there are other solutions available. To get started streaming, register by clicking the “Sign Up” link below and follow the instructions provided in the welcome email to set up your streaming client.
-                    </p>
-                    <a href="@routes.AuthenticationController.registerPage()" class="btn btn-default btn-lg wow flipInX">Sign Up</a>
-                    @*<a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>*@
+                        <p>
+                            As a broadcaster, ZAStream recommends and fully supports the free <a href="https://obsproject.com/" target="_blank"> Open Broadcaster Software </a>to start streaming video from your computer, but there are other streaming solutions available.
+                        </p>
+
+                        <button class="btn btn-default btn-lg wow flipInX" onclick="toggleDocument()">Read More</button>
+
+                        <section id="tutorial" style="display: none;">
+                            <h3 class="title"><strong>Broadcaster Streaming Quick Start Guide</strong></h3>
+                            <p>This quick guide will tell you everything you need to know to start a basic stream on our website using <a href="https://obsproject.com/" target="_blank">"OBS"</a>. Tutorials for other streaming software will be released soon!</p>
+                            <p>Now that you are registered, you can begin to set up your streaming software to stream to our website!</p>
+                            <p>Before beginning, you will need to download and install a streaming software. We recommend using <a href="https://obsproject.com/" target="_blank">"OBS"</a>.</p>
+
+                            <hr/>
+
+                            <h3 class="title"><strong>Steps To Stream: </strong></h3>
+                            <ol>
+
+                                <li>Get your unique stream key from the email that was sent during registration in your mailbox or from your <a href="@routes.ChannelController.show(userInfo.getUserName)" target="_blank">channel dashboard on your channel page</a>.</li>
+                                <li>Open the OBS software and click 'Settings'. </li>
+                                <li>Click the 'Stream' section of the configuration and choose 'Custom Streaming Server' as your Stream Type.</li>
+                                <li>For the URL, enter <code>rtmp://@Constants.HOSTNAME/live</code></li>
+                                <li>For the stream key, enter in the key that you found during step 1.</li>
+                                <li>Click 'OK' and now your streaming software is configured properly!</li>
+                                <li>If this is your first time streaming, you will need to set up Scenes and Sources. For more information on how to do that, check out the OBS documentation <a href="https://obsproject.com/forum/resources/obs-classic-official-overview-guide.6/">here!</a></li>
+                                <li>To actually begin streaming, click the 'Start Streaming' button in OBS. It currently takes around 30 seconds for the stream to show up on your channel page.</li>
+                                <li>Enjoy your stream on your channel page!</li>
+                            </ol>
+                        </section>
+                        @*<a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>*@
+                    }else{
+                        <h2 class="text-primary">Get Started!</h2>
+
+                        <p>
+                            Here at ZAStream, we recommend the free Open Broadcaster Software to stream video from your computer, but there are other solutions available. To get started streaming, register by clicking the “Sign Up” link below and follow the instructions provided in the welcome email to set up your streaming client.
+                        </p>
+                        <a href="@routes.AuthenticationController.registerPage()" class="btn btn-default btn-lg wow flipInX">Sign Up</a>
+                        @*<a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>*@
+                    }
+
                 </div>
                 <br>
                 <hr/>
                 <br>
-
             </div>
+            <script>
+
+            function toggleDocument() {
+                var x = document.getElementById("tutorial");
+
+                if (x.style.display === 'none') {
+                    x.style.display = 'block';
+                } else {
+                    x.style.display = 'none';
+
+                }
+            }
+            </script>
         </aside>
 
 
