@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 import play.Logger;
+import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -11,9 +12,9 @@ import java.util.List;
 /**
  * Channel: Data Model + Helper Methods for Channels
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 @Entity
@@ -34,9 +35,19 @@ public class Channel extends Model{
     @Size(max=3, min=3)
     public String channelType = "PUB";
 
+    @Column(name="channelStatus")
+    public boolean channelStatus = false;
+
+    @Column(name="channelPassword")
+    public String channelPassword;
+
     @Column(name="streamKey")
     @Size(min=16, max=16)
     public String streamKey;
+
+    @Column(name="channelTitle")
+    @Size(min=3, max=64)
+    public String channelTitle;
 
     @OneToOne
     @JoinColumn(name="roomID")
@@ -61,6 +72,9 @@ public class Channel extends Model{
         this.owner = owner;
         this.currentViewers = 0;
         this.totalViews = 0;
+        this.channelTitle = owner.getUserName();
+        this.channelPassword = null;
+        this.channelStatus = false;
     }
 
     /**
@@ -79,10 +93,24 @@ public class Channel extends Model{
         return channels.size() > 0;
     }
 
-    public static boolean isStreaming(String key){
+    public static boolean isStreaming(String channel, String key){
         File streamFile = new File("/HLS/live/"+key+"/index.m3u8");
+        boolean status = false;
 
-        return streamFile.exists();
+        Channel c = Channel.findChannel(User.findByUsername(channel));
+
+        if(streamFile.exists()){
+            status = true;
+            if(!c.isStreaming()){
+                c.setIsStreaming(true);
+                c.save();
+            }
+        }else if (c.isStreaming()){
+            c.setIsStreaming(false);
+            c.save();
+        }
+
+        return status;
     }
 
 
@@ -100,7 +128,7 @@ public class Channel extends Model{
     }
 
     public void setCurrentViewers(int currentViewers) {
-        if(currentViewers > 0)
+        if(currentViewers >= 0)
             this.currentViewers = currentViewers;
     }
 
@@ -143,6 +171,23 @@ public class Channel extends Model{
     public void setOwner(User owner) {
         this.owner = owner;
     }
+
+    public String getChannelPassword() {
+        return channelPassword;
+    }
+
+    public void setChannelPassword(String channelPassword) {
+        this.channelPassword = channelPassword;
+    }
+
+    public boolean isStreaming() {
+        return channelStatus;
+    }
+
+    public void setIsStreaming(boolean channelStatus) {
+        this.channelStatus = channelStatus;
+    }
+
     //====================END Getters and Setters====================
 
     @Override
@@ -167,11 +212,31 @@ public class Channel extends Model{
         List<Channel> theChannel = find.where().eq("userID", user.userId).findList();
 
         if(theChannel.size() == 0) {
-            Logger.debug("No Channel Found for ID: "+ user.userId + ", Name: "+ user.userName);
+//            Logger.debug("No Channel Found for ID: "+ user.userId + ", Name: "+ user.userName);
             return null;
         }else{
-            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
+//            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
             return theChannel.get(0);
         }
     }
+
+    public static List<Channel> findChannels(String query){
+        List<Channel> channels = find.where().like("channelTitle", "%"+query+"%").findList();
+
+        return channels;
+    }
+
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+
+    public void setChannelTitle(String channelTitle) {
+        this.channelTitle = channelTitle;
+    }
+
+    public boolean isPublic(){
+        return channelType.equals("PUB");
+    }
+
+
 }

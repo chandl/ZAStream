@@ -1,6 +1,6 @@
 name := """ZAStream"""
 
-version := "1.0"
+version := "2.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 

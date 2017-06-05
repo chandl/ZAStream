@@ -1,5 +1,6 @@
 package controllers;
 
+import assets.constant.Constants;
 import helper.Secured;
 import models.Channel;
 import models.ChannelFactory;
@@ -21,9 +22,9 @@ import java.util.List;
 /**
  * AuthenticationController: Controller to handle Signing up & Logging in.
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 public class AuthenticationController extends Controller {
@@ -54,7 +55,12 @@ public class AuthenticationController extends Controller {
     public Result newUser(){
         DynamicForm dynForm = Form.form().bindFromRequest();//Bind data from POST to the form
         registerForm = formFactory.form(RegisterForm.class);
-        User newUser = new User(dynForm.get("userName"), dynForm.get("passWord"),dynForm.get("email") );
+
+        String userName = dynForm.get("userName");
+        String password = dynForm.get("password");
+        String email = dynForm.get("email");
+
+        User newUser = new User(userName, password, email);
 
         //Use the User.validate() method to validate constraints
         List<ValidationError> errors = newUser.validate();
@@ -77,6 +83,9 @@ public class AuthenticationController extends Controller {
         }else{
             Logger.debug("Unsucessful New User: "+ newUser.getUserName());
             Logger.debug("Errors: "+errors.toString());
+
+            flash("userName",userName);
+            flash("email",email);
 
             //Add errors to registrationForm, these are passed back to the page
             for(ValidationError e : errors) {
@@ -129,6 +138,7 @@ public class AuthenticationController extends Controller {
 
         }else if(!User.isUser(user)){//not a user
             loginForm.reject("userName", "Invalid Username");
+            flash("userName",user);
             return badRequest(views.html.login.render("Invalid Username", loginForm, Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
         }else{//bad password
             loginForm.reject("passWord", "Invalid Password");
@@ -150,7 +160,14 @@ public class AuthenticationController extends Controller {
         return redirect(routes.HomeController.index());
     }
 
-    public String getRegistrationEmail(User newUser){
+
+    /**
+     * Helper method to format a registration email.
+     *
+     * @param newUser The {@link User} that we should send the email to.
+     * @return A String representation of the email to send.
+     */
+    private String getRegistrationEmail(User newUser){
         String userName = newUser.getUserName();
         String streamKey = Channel.findChannel(newUser).getStreamKey();
 
@@ -159,7 +176,6 @@ public class AuthenticationController extends Controller {
                 "  <head>\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width\" />\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" +
-                "    <title>Simple Transactional Email</title>\n" +
                 "    <style>\n" +
                 "      /* -------------------------------------\n" +
                 "          GLOBAL RESETS\n" +
@@ -432,6 +448,10 @@ public class AuthenticationController extends Controller {
                 "        .btn-primary a:hover {\n" +
                 "          background-color: #34495e !important;\n" +
                 "          border-color: #34495e !important; } }\n" +
+                "        img.full {\n" +
+                "               width:50%;\n" +
+                "               height:auto;\n" +
+                "        }"+
                 "\n" +
                 "    </style>\n" +
                 "  </head>\n" +
@@ -452,7 +472,7 @@ public class AuthenticationController extends Controller {
                 "                  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                      <td>\n" +
-                "                        <img src=\"http://zastream.com/assets/big-logo.png\"/>\n" +
+                "                        <img src=\"http://"+ Constants.HOSTNAME +"/assets/big-logo.png\" class=\"full\"/>\n" +
                 "                        <h2>Hi "+userName+",</h2>\n" +
                 "                        <p>Welcome to ZAStream! A new live video streaming website built for professionals, teachers, gamers, and everyone in-between.</p>\n" +
                 "\n" +
@@ -478,7 +498,7 @@ public class AuthenticationController extends Controller {
                 "\n" +
                 "                        <p class=\"monospace\">\n" +
                 "                          Stream Type: <span class=\"highlight\">Custom Streaming Server</span> <br/>\n" +
-                "                          URL: <span class=\"highlight\">rtmp://dev.zastream.com/live</span> <br/>\n" +
+                "                          URL: <span class=\"highlight\">rtmp://"+ Constants.HOSTNAME +"/live</span> <br/>\n" +
                 "                          Stream Key: <span class=\"highlight\">"+streamKey+"</span> <br/>\n" +
                 "                        </p>\n" +
                 "\n" +
@@ -505,7 +525,6 @@ public class AuthenticationController extends Controller {
                 "                <tr>\n" +
                 "                  <td class=\"content-block\">\n" +
                 "                    <span class=\"apple-link\">Copyright ZAStream &copy; 2017</span>\n" +
-                "                    <br> Don't like these emails? <a href=\"#\">Unsubscribe</a>.\n" +
                 "                  </td>\n" +
                 "                </tr>\n" +
                 "              </table>\n" +
@@ -520,6 +539,7 @@ public class AuthenticationController extends Controller {
                 "    </table>\n" +
                 "  </body>\n" +
                 "</html>\n";
+
         return registrationEmail;
     }
 }

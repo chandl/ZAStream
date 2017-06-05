@@ -176,6 +176,9 @@ footer {
 .footer-text a{
   color: white;
 }
+.footer-text#separator{
+    margin: 0 5px;
+}
 
 @media(max-width:768px){
   .navbar-brand img{
@@ -340,6 +343,7 @@ textarea {
 
 .call-to-action h2 {
     margin: 0 auto 20px;
+
 }
 
 .gallery-box {
@@ -493,3 +497,8 @@ img::-moz-selection {
     color: #fff;
     background: 0 0;
 }
+
+.small-text{
+    font-size:0.9em;
+}
+

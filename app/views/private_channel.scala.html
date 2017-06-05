@@ -1,0 +1,33 @@
+@* This the registeration form page for user to register an account throgh ZAStream DB*@
+@(channel: String,
+        privateChannel: Form[views.formdata.PrivateChannelForm], isLoggedIn: Boolean, userInfo: User)
+
+@import assets.constant.Constants
+
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page.
+*@
+@main(channel, isLoggedIn, userInfo) {
+
+        <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
+
+   <div class="log">
+      <div class="content2">
+       <h3>Enter the password for @channel's channel:</h3>
+           @if(privateChannel.hasErrors) {
+                   @if(privateChannel.error("badPassword")!=null ){
+                           <p class="errormsg">Please check your Password!</p>
+                   }
+
+           }
+       <form method="post" action="@routes.ChannelController.showPrivate(channel)">
+               <input class="privateP" type="password" name="channelPassword" required placeholder="@Constants.PASSWORD_PLACEHOLDER" />
+               <input type="submit" class="enterPassword" value="enter" />
+       </form>
+      </div>
+
+       <div class="clear"></div>
+   </div>
+}

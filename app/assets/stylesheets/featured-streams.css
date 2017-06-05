@@ -1,0 +1,53 @@
+/*Item Styles*/
+.item{
+    border: 1px solid black;
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+    border-radius:8px;
+    padding: 30px;
+    margin: 5px;
+}
+.item:hover{
+    border-color: mediumpurple;
+    animation: glow 800ms ease-out infinite alternate;
+    background: #333;
+    background: linear-gradient(#333, #222);
+}
+
+.item p{
+    line-height: 1em;
+}
+.item hr{
+    max-width: 75%;
+}
+
+.broadcastTitle{
+    margin-top: 0;
+    font-size: 1.5em;
+}
+.channelName{
+    font-weight: 300;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.isActive, .channelType, .totalViews, .currentViews{
+    /*position: relative;*/
+    display: block;
+}
+
+.isActive.notLive span{
+    color: indianred;
+}
+
+.isActive.live span{
+    color: greenyellow;
+}
+
+.desc span{
+    font-weight: 700;
+}
+
+.view-more-streams{
+    margin: 25px 0;
+}

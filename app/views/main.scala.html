@@ -18,12 +18,12 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/styles.css")"/>
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/nav.css")"/>
 
-    <link rel="shortcut icon" href="assets/images/minimized-logo.png" type="image/png">
+    <link rel="shortcut icon" href="/assets/images/minimized-logo.png" type="image/png">
         <script
         src="https://code.jquery.com/jquery-3.2.0.min.js"
         integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I="
         crossorigin="anonymous"></script>
-        <script src="assets/javascripts/jquery.easing.min.js"></script>
+        <script src="/assets/javascripts/jquery.easing.min.js"></script>
 
     </head>
     <body>
@@ -36,10 +36,19 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand page-scroll" href="@routes.HomeController.index()"><img src="assets/images/index/logo.png" alt="icon" ></a>
+                    <a class="navbar-brand page-scroll" href="@routes.HomeController.index()"><img src="/assets/images/index/logo.png" alt="icon" ></a>
                 </div>
                 <div class="navbar-collapse collapse" id="bs-navbar">
                     <ul class="nav navbar-nav navbar-right">
+                        <li>
+                           <div class="search">
+                            <form action="javascript:search()">
+                                <input class="searchBar" type="text" id="searchInput" name="search" placeholder="Search...">
+                                <button class="searchButton">Search</button>
+                            </form>
+                           </div>
+                        </li>
+
                         <li>
                             @if(isLoggedIn){
                                 <a class="page-scroll logout" title="Logged in" href="@routes.AuthenticationController.logout()">Hi, @userInfo.getUserName(). Logout</a>
@@ -48,24 +57,30 @@
                             }
 
                         </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
-        @* And here's where we render the `Html` object containing
-         * the page content. *@
+
         @content
 
         <footer id="footer">
             <div class="container-fluid">
+                <span class="pull-left text-muted footer-text"><a href="@routes.ChatController.generalChat()">General Chat Room</a></span>
+                <span class="footer-text pull-left" id="separator"><a> | </a></span>
 
-                <span class="pull-right text-muted footer-text"><a href="http://zastream.com">Copyright ZAStream</a> &copy; 2017</span>
+                <span class="pull-left text-muted footer-text"><a href="@routes.FeedbackController.feedbackPage()">Share Your Thoughts</a></span>
+
+
+                <span class="pull-right text-muted footer-text"><a href="@routes.HomeController.index()">Copyright ZAStream</a> &copy; 2017</span>
+
             </div>
         </footer>
 
-
-        <script src="assets/javascripts/bootstrap.min.js"></script>
-        <script src="assets/javascripts/wow.js"></script>
-        <script src="assets/javascripts/scripts.js"></script>
+        <script src="/assets/javascripts/search.js"></script>
+        <script src="/assets/javascripts/bootstrap.min.js"></script>
+        <script src="/assets/javascripts/wow.js"></script>
+        <script src="/assets/javascripts/scripts.js"></script>
     </body>
 </html>

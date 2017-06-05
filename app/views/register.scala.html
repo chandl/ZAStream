@@ -44,9 +44,19 @@
                 }
 
                 <form method="post" action="@routes.AuthenticationController.newUser()">
-                    <input type="text" name="userName" value="@Constants.USERNAME_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.USERNAME_PLACEHOLDER';}">
-                    <input type="text" name="email" value="@Constants.EMAIL_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '@Constants.EMAIL_PLACEHOLDER';}">
-                    <input type="password" name="passWord" value="@Constants.PASSWORD_PLACEHOLDER" onfocus="this.value = '';" onblur="if (this.value == '') {tis.value = '@Constants.PASSWORD_PLACEHOLDER';}">
+
+                    @if(flash.containsKey("userName")) {
+                        <input type="text" name="userName" required value="@flash.get("userName")" placeholder="@Constants.USERNAME_PLACEHOLDER" />
+                    }else{
+                        <input type="text" name="userName" required placeholder="@Constants.USERNAME_PLACEHOLDER" />
+                    }
+
+                    @if(flash.containsKey("email")) {
+                        <input type="text" name="email" required value="@flash.get("email")"placeholder="@Constants.EMAIL_PLACEHOLDER" />
+                    }else{
+                        <input type="text" name="email" required placeholder="@Constants.EMAIL_PLACEHOLDER" />
+                    }
+                    <input type="password" name="password" required placeholder="@Constants.PASSWORD_PLACEHOLDER" />
                     <input type="submit" class="register" value="register" />
                 </form>
             </div>

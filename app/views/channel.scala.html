@@ -4,82 +4,302 @@
 @main(stream, isLoggedIn, userInfo) {
 
         <link type="text/css" rel="stylesheet" href="/assets/stylesheets/Cstyles.css" />
-        <link href="//vjs.zencdn.net/5.8/video-js.min.css" rel="stylesheet" />
-        <link href="/assets/stylesheets/videojs-errors.css" type="text/css" rel="stylesheet" />
-        <script src="//vjs.zencdn.net/5.8/video.min.js"></script>
+        <link href="https://vjs.zencdn.net/5.19.2/video-js.css" rel="stylesheet">
+        <script src="https://vjs.zencdn.net/5.19.2/video.js"></script>
+
         <script src="/assets/javascripts/videojs-contrib-hls.min.js"></script>
-
-    <script src="/assets/javascripts/videojs-brand.min.js"></script>
-
-
-
-    <section class="bg-primary" id="one">
-            <div class="container">
-                @if(Channel.isStreaming(key)){
-                    <div class="row">
-                        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                            <h1 text-align='center'>@stream</h1>
-                            <video id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
-                                <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
-                            </video>
+        <script src="/assets/javascripts/videojs-brand.min.js"></script>
+        <link href="/assets/emoji/wdt-emoji-bundle.css" rel="stylesheet"/>
+        <script type="text/javascript" src="/assets/emoji/emoji.min.js"></script>
+        <script type="text/javascript" src="/assets/emoji/wdt-emoji-channel.min.js"></script>
 
 
 
-                            <p class="view-stats">
-                                Current Viewers: <span id="viewCount">0</span>
-                                Total Views: <span id="totalCount">@views</span>
-                            </p>
+    @*If the person accessing the page is the page's owner*@
+    @if(isLoggedIn && userInfo.getUserName == stream){
+
+        <div id="broadcaster-sidebar" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+            <h2>Broadcaster Dashboard</h2>
+            <hr/>
+            <h3>Channel Title</h3>
+            <input id="newTitle" onkeydown="limit(this);" onkeyup="limit(this);" type="text" placeholder="Title" />
+            <button id="changeTitle" onclick="updateTitle()">Change</button>
+            <hr/>
+
+            <h3>View Stream Key</h3>
+            <button id="viewStreamKey" onclick="toggleStreamKey()">Show</button>
+            <span id="streamKey" style="display: none;" class="streamKey">@userInfo.getUserChannel().getStreamKey()</span>
+            <hr/>
+
+            <h3>Reset Stream Key</h3>
+            <button id="resetStreamKey" onclick="toggleConfirm()">Reset</button>
+            <div id="confirmStreamKeyReset" style="display: none;">
+
+                <p id="warning">WARNING: Changing your stream key will cause your stream to end. You will need to re-configure your streaming software with the new key.</p>
+
+                <button id="confirmChange"><a id="resetStreamKey" href="@routes.ChannelController.changeStreamKey(stream)">Change</a></button>
+                <button id="denyChange" onclick="toggleConfirm()">Cancel</button>
+            </div>
+
+            <hr/>
+            <h3>Channel Privacy</h3>
+
+            @if(Channel.findChannel(User.findByUsername(stream)).isPublic){
+                <input id="channelPassword" style="display: inline;" onkeydown="limit(this);" onkeyup="limit(this);" type="text" placeholder="Channel Password" />
+                <p id="error" style="display: none;"></p>
+                <button id="setPrivacy" onclick="updateChannelPassword()">Make Private</button>
+            }else{
+                <input id="channelPassword" style="display: none;" onkeydown="limit(this);" onkeyup="limit(this);" type="text" placeholder="Channel Password" />
+                <p id="error" style="display: none;"></p>
+                <button id="setPrivacy" onclick="updateChannelPassword()">Make Public</button>
+            }
+
+            <hr/>
+        </div>
+
+        <span class="sidebar-open" id="sidebar-open" onclick="openNav()">dashboard &#9776;</span>
 
 
-                        </div>
-                    </div>
-                }else{
-                    <div class="row">
-                        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                            <h2 id="sorry">Sorry, @stream is not streaming right now.</h2>
-                        </div>
-                    </div>
+        <script type="text/javascript">
+                function isGoodInput(pw){
+                    if(pw.length < 3 || pw.length > 64 ){
+                        document.getElementById("error").innerHTML = "Password Length must be between 3-64 characters.";
+                        document.getElementById("error").style.display = "block";
+                        return false;
+                    }
+                    return true;
                 }
 
 
+                function updateChannelPassword(){
+                    var input = document.getElementById("channelPassword");
+                    var privacyButton = document.getElementById("setPrivacy");
+
+                    var pw;
+                    if($("#channelPassword").css('display') === 'none'){
+                        pw = " ";
+                        input.style.display = "inline";
+                        privacyButton.innerHTML = 'Make Private';
+                    }else{
+                        pw = document.getElementById("channelPassword").value;
+                        if(isGoodInput(pw)){
+                            input.style.display = "none";
+                            document.getElementById("error").style.display="none";
+                            privacyButton.innerHTML = 'Make Public';
+                        }else{
+                            return;
+                        }
+
+                    }
+
+                    getSocket().send(@userInfo.getUserId()+",P\n"+pw);
+
+                    $("#channelPassword").val('');
+                }
+
+                function updateTitle(){
+                    var title = document.getElementById("newTitle").value;
+
+                    getSocket().send(@userInfo.getUserId+",T\n"+title);
+
+                    $("#newTitle").val('');
+                }
+
+                function toggleConfirm(){
+                    var x = document.getElementById("confirmStreamKeyReset");
+                    var button = document.getElementById("resetStreamKey");
+
+                    if(x.style.display === 'none'){
+                        x.style.display = 'block';
+                        button.style.display = "none";
+                    }else{
+                        x.style.display = 'none';
+                        button.style.display = "inline";
+                    }
+                }
+
+                function limit(element) {
+                    var max_chars = 64;
+
+                    if(element.value.length > max_chars) {
+                        element.value = element.value.substr(0, max_chars);
+                    }
+                }
+
+                function openNav() {
+                    document.getElementById("broadcaster-sidebar").style.width = "250px";
+                    document.getElementById("main").style.marginRight = "250px";
+                    document.getElementById("main").style.opacity = "0.3";
+                    document.getElementById("sidebar-open").style.visibility = "hidden";
+                }
+
+                function closeNav() {
+                    document.getElementById("broadcaster-sidebar").style.width = "0";
+                    document.getElementById("main").style.marginRight = "0";
+                    document.getElementById("main").style.opacity = "1";
+                    document.getElementById("sidebar-open").style.visibility = "visible";
+                }
+                function toggleStreamKey(){
+                    var x = document.getElementById("streamKey");
+
+                    if(x.style.display === 'none'){
+                        x.style.display = 'block';
+                        document.getElementById("viewStreamKey").innerText = "Hide";
+                    }else{
+                        x.style.display = 'none';
+                        document.getElementById("viewStreamKey").innerText = "Show";
+                    }
+
+                }
+
+        </script>
+
+        @if(flash.containsKey("streamKeyChanged")) {
+            <script type="text/javascript">
+                    $(document).ready(function(){
+                        $("#changeStreamKeySuccess").modal('show');
+
+                    });
+            </script>
+        }
+
+        <div class="modal fade" id="changeStreamKeySuccess" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Stream Key Changed Successfully!</h4>
+                </div>
+                <div class="modal-content">
+                    Your stream key was just changed! You will need to re-configure your streaming software and re-start your stream.
+                    To view your new stream key, access the broadcaster dashboard on your channel page.
+                </div>
             </div>
-        </section>
+        </div>
 
-        @*<section class="no-padding" id="two">*@
-            @*<div class="container">*@
-                @*<div class="row">*@
-                    @*<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">*@
-                        @*<div id="wrapper">*@
-                            @*<div id="menu">*@
-                                @*<p class="welcome">Welcome, User<b></b></p>*@
-                                @*<p class="logout"><a id="exit" href="#">Exit Chat</a></p>*@
-                                @*<div style="clear:both"></div>*@
-                            @*</div>*@
-
-                            @*<div id="chatbox"></div>*@
-
-                            @*<form name="message" action="">*@
-                                @*<input name="usermsg" type="text" id="usermsg" size="63" />*@
-                                @*<input name="submitmsg" type="submit" id="submitmsg" value="Send" />*@
-                            @*</form>*@
-                        @*</div>*@
-                    @*</div>*@
-                @*</div>*@
-
-            @*</div>*@
-
-        @*</section>*@
-
-    <script>
-            var player = videojs('#player');
-            player.brand({
-                image: "assets/images/minimized-logo1.png",
-                title: "ZAStream",
-                destination: "https://zastream.com",
-                destinationTarget: "_top"
-            });
-    </script>
+    }
 
 
-   <script src="@routes.ChannelController.wsVC(stream)" type="text/javascript"></script>
+
+    <section class="bg-primary" id="main">
+        <div class="container-fluid">
+        @if(Channel.isStreaming(stream, key)){
+            <div class="row">
+                <div class="container-fluid">
+                <h1 id="stream-title">@Channel.findChannel(User.findByUsername(stream)).getChannelTitle()</h1>
+                </div>
+            </div>
+            <div class="row">
+
+            @*Video Box*@
+            @if(isLoggedIn){
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            }else{
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            }
+                    <video autoplay id="player" class="video-js vjs-big-play-centered" height="360" width="640" controls preload="auto">
+                        <source src="/live/@key/index.m3u8" type='application/x-mpegURL' />
+                    </video>
+
+                    <div class="view-stats">
+                        <p id="username">Channel: @stream</p>
+                        <p id="total-views">Total Views: <span id="totalCount">@views</span></p>
+                        <p id="current-views">Watching Now: <span id="viewCount">0</span></p>
+                    </div>
+
+                </div>
+
+                @*Chat Box*@
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                @if(isLoggedIn){
+                    <section class="no-padding" >
+
+                        <div id="wrapper">
+                            <div id="chatbox">
+
+
+
+                            </div>
+                            <input name="usermsg" class="wdt-emoji-bundle-enabled wdt-emoji-open-on-colon usermsg" placeholder="Send a message" type="text" id="usermsg" size="63" />
+                            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+                        </div>
+
+                    </section>
+                }
+                </div>
+
+                <div class="wdt-emoji-popup">
+                    <a href="#" class="wdt-emoji-popup-mobile-closer"> × </a>
+                    <div class="wdt-emoji-menu-content">
+                        <div id="wdt-emoji-menu-header">
+                            <a class="wdt-emoji-tab active" data-group-name="Recent"></a>
+                            <a class="wdt-emoji-tab" data-group-name="People"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Nature"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Foods"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Activity"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Places"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Objects"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Symbols"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Flags"></a>
+                            <a class="wdt-emoji-tab" data-group-name="Custom"></a>
+                        </div>
+                        <div class="wdt-emoji-scroll-wrapper">
+                            <div id="wdt-emoji-menu-items">
+                                <input id="wdt-emoji-search" type="text" placeholder="Search">
+                                <h3 id="wdt-emoji-search-result-title">Search Results</h3>
+                                <div class="wdt-emoji-sections"></div>
+                                <div id="wdt-emoji-no-result">No emoji found</div>
+                            </div>
+                        </div>
+                        <div id="wdt-emoji-footer">
+                            <div id="wdt-emoji-preview">
+                                <span id="wdt-emoji-preview-img"></span>
+                                <div id="wdt-emoji-preview-text">
+                                    <span id="wdt-emoji-preview-name"></span><br>
+                                    <span id="wdt-emoji-preview-aliases"></span>
+                                </div>
+                            </div>
+                            <div id="wdt-emoji-preview-bundle">
+                                <span>ZAStream Emojis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }else{
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
+                    <h2 id="sorry">Sorry, @stream is not streaming right now.</h2>
+                </div>
+            </div>
+        }
+
+
+        </div>
+    </section>
+
+
+
+
+    @if(Channel.isStreaming(stream, key)) {
+        <script>
+                var player = videojs('#player', {
+                    fluid: true
+                });
+                player.brand({
+                    image: "assets/images/minimized-logo1.png",
+                    title: "ZAStream",
+                    destination: "https://zastream.com",
+                    destinationTarget: "_top"
+                });
+        </script>
+    }
+
+    <script src="@routes.ChannelController.webSocketChannel(stream)" type="text/javascript"></script>
+    @if(isLoggedIn) {
+        <script src="@routes.ChatController.webSocketChannelChat(stream, userInfo.userId)" type="text/javascript"></script>
+    }
+
 }

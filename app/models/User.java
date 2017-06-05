@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 import helper.HashHelper;
+import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import javax.persistence.*;
@@ -14,9 +15,9 @@ import java.util.regex.Pattern;
 /**
  * User: Data Model + Helper Methods for Users
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 @Entity
@@ -44,7 +45,7 @@ public class User extends Model{
     @Column(name="email")
     public String email;
 
-    private static final String EMAIL_PATTERN =
+    public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
@@ -141,7 +142,7 @@ public class User extends Model{
         Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
         Matcher emailMatcher = emailPattern.matcher(email);
 
-        Pattern specialPattern = Pattern.compile("[^A-Za-z0-9-_]");
+        Pattern specialPattern = Pattern.compile("^[A-Za-z0-9-_]*$");
         Matcher specialMatcher = specialPattern.matcher(userName);
 
 
@@ -186,7 +187,16 @@ public class User extends Model{
         return(users.size() == 0)? null:users.get(0);
     }
 
+    public static User findById(int id){
+        List<User> users = find.where().eq("userId", id).findList();
+        return(users.size() == 0)? null:users.get(0);
+    }
 
+    public static List<User> findUsers(String query){
+        List<User> users = find.where().like("userName", "%"+query+"%").findList();
+
+        return users;
+    }
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

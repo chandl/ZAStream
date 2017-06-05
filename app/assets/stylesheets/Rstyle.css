@@ -139,7 +139,7 @@ h1 {
 	font-family: 'Muli', sans-serif;
 	border-radius: 4px;
 }
-.register {
+.register, .enterPassword {
 	padding:10px;
 	background-color:#4C9A39;
 	width:78%;
