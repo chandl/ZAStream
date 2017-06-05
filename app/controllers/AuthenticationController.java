@@ -1,5 +1,6 @@
 package controllers;
 
+import assets.constant.Constants;
 import helper.Secured;
 import models.Channel;
 import models.ChannelFactory;
@@ -471,7 +472,7 @@ public class AuthenticationController extends Controller {
                 "                  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                      <td>\n" +
-                "                        <img src=\"http://zastream.com/assets/big-logo.png\" class=\"full\"/>\n" +
+                "                        <img src=\"http://"+ Constants.HOSTNAME +"/assets/big-logo.png\" class=\"full\"/>\n" +
                 "                        <h2>Hi "+userName+",</h2>\n" +
                 "                        <p>Welcome to ZAStream! A new live video streaming website built for professionals, teachers, gamers, and everyone in-between.</p>\n" +
                 "\n" +
@@ -497,7 +498,7 @@ public class AuthenticationController extends Controller {
                 "\n" +
                 "                        <p class=\"monospace\">\n" +
                 "                          Stream Type: <span class=\"highlight\">Custom Streaming Server</span> <br/>\n" +
-                "                          URL: <span class=\"highlight\">rtmp://dev.zastream.com/live</span> <br/>\n" +
+                "                          URL: <span class=\"highlight\">rtmp://"+ Constants.HOSTNAME +"/live</span> <br/>\n" +
                 "                          Stream Key: <span class=\"highlight\">"+streamKey+"</span> <br/>\n" +
                 "                        </p>\n" +
                 "\n" +

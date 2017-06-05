@@ -456,7 +456,7 @@ public class AccountRecoveryController extends Controller {
                 "                  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                      <td>\n" +
-                "                        <img src=\"http://zastream.com/assets/big-logo.png\" class=\"full\"/>\n" +
+                "                        <img src=\"http://"+ Constants.HOSTNAME +"/assets/big-logo.png\" class=\"full\"/>\n" +
                 "                        <hr/>\n" +
                 "                        <h2>Hi "+ recovery.getUserToRecover().getUserName()+",</h2>\n" +
                 "                        <p>We have received a request to reset your password. Please <a href=\""+link + recovery.getRecoveryHash()+"\">click here to confirm the reset</a> to choose a new password. <br/>Otherwise, you can ignore this email.</p>\n" +
@@ -812,7 +812,7 @@ public class AccountRecoveryController extends Controller {
                 "                  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                 "                    <tr>\n" +
                 "                      <td>\n" +
-                "                        <img src=\"http://zastream.com/assets/big-logo.png\" class=\"full\"/>\n" +
+                "                        <img src=\"http://"+ Constants.HOSTNAME +"/assets/big-logo.png\" class=\"full\"/>\n" +
                 "                        <hr/>\n" +
                 "                        <h2>Hi "+user.getUserName()+",</h2>\n" +
                 "                        <p>This is a confirmation that the password for your ZAStream account " + user.getUserName() + " has just been changed. <br/></p>\n" +

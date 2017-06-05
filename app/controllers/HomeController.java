@@ -33,7 +33,9 @@ public class HomeController extends Controller {
             ArrayList<Channel> nonLiveChannels = ChannelController.findNonLiveChannels();
 
             for(int i = channels.size(),  b =0; i < 6; i++ ){
-                channels.add(nonLiveChannels.get(b++));
+                if(nonLiveChannels.size() > b){
+                    channels.add(nonLiveChannels.get(b++));
+                }
             }
 
         }
