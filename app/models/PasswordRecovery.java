@@ -12,12 +12,26 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Password Recovery Table. Used to recover passwords.
+ * PasswordRecovery: Model for Password Recovery
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
  */
 @Entity
 @Table(name="password_recovery")
 public class PasswordRecovery extends Model{
 
+    /**
+     * Method to create a Password Recovery object / DB entry.
+     * 
+     * This will create a random 24-digit string that is linked to a specific channel for a limited time (2 hrs).
+     * If a user accesses the password recovery page with this 24-digit recovery string, they will be able to reset
+     * their password.
+     * 
+     * @param userToRecover The {@link User} to create a PasswordRecovery entry for.
+     */
     public PasswordRecovery(User userToRecover) {
         this.userToRecover = userToRecover;
 
@@ -84,6 +98,10 @@ public class PasswordRecovery extends Model{
         this.recoveryId = recoveryId;
     }
 
+    /**
+     * Method that check if the password recovery is expired.
+     * @return {code true} if is expired and {@code false} if is not expired.
+     */
     public boolean isExpired(){
         Date currentDate = new Date();
         Date sqlExpireDate = new Date(expireDate.getTime());

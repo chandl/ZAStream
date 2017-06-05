@@ -10,6 +10,14 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ * Chat: Model for Chat objects.
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 2.0
+ */
 @Entity
 @Table(name="chat")
 public class Chat extends Model {

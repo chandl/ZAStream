@@ -21,9 +21,9 @@ import java.util.List;
 /**
  * AuthenticationController: Controller to handle Signing up & Logging in.
  *
- * @author Chandler Severson <seversonc@sou.edu>
- * @author Yiwei Zheng <zhengy1@sou.edu>
- * @version 1.0
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
  * @since 1.0
  */
 public class AuthenticationController extends Controller {
@@ -159,7 +159,14 @@ public class AuthenticationController extends Controller {
         return redirect(routes.HomeController.index());
     }
 
-    public String getRegistrationEmail(User newUser){
+
+    /**
+     * Helper method to format a registration email.
+     *
+     * @param newUser The {@link User} that we should send the email to.
+     * @return A String representation of the email to send.
+     */
+    private String getRegistrationEmail(User newUser){
         String userName = newUser.getUserName();
         String streamKey = Channel.findChannel(newUser).getStreamKey();
 
