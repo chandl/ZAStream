@@ -12,8 +12,49 @@ body {
 	font-family: 'Muli', sans-serif;
 }
 
+.modal-header{
+	background-color: #282828;
+	color: white;
+	border: 1px solid black;
+    border-radius: 15px;
+}
+.modal-title{
+    font-size: 1.5em;
+}
+.modal-header button{
+	color:white;
+}
+
+.modal-content{
+	background-color: #282828;
+	color: white;
+	padding: 5%;
+	border: 1px solid black;
+}
+.modal{
+    text-align: center;
+    font-weight:700;
+	background-color: rgba(0,0,0, 0.6);
+    padding-top: 10%;
+}
+
+.errormsg{
+	font-size: small;
+	font-family: monospace;
+	background-color: rgba(255,40,40,0.8);
+}
+
 .navbar {
 	min-height: 95px !important;
+	background-color: rgba(255,255,255,.8);
+}
+
+@media(max-width:768px) {
+	.navbar {
+		background-color: rgba(0,0,0,.8);
+		min-height: 0px !important;
+	}
+
 }
 
 p.errormsg{
@@ -49,6 +90,7 @@ h1 {
 	  width:48%;
 		margin-left:auto;
 		margin-right:auto;
+	margin-top: 15%;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.21);
     float:center;
@@ -63,7 +105,7 @@ h1 {
 	text-align:left;
 	outline:none;
 	font-size:18px;
-	background:url(../assets/img/register/person.png) no-repeat 440px 10px;
+	background: no-repeat 440px 10px;
 	margin-top:5%;
 	font-weight: 300;
 	font-family: 'Muli', sans-serif;
@@ -78,7 +120,7 @@ h1 {
 	text-align:left;
 	outline:none;
 	font-size:18px;
-	background:url(../assets/img/register/mail.png) no-repeat 440px 10px;
+	background: no-repeat 440px 10px;
 	margin-top:4%;
 	font-family: 'Muli', sans-serif;
 	border-radius: 4px;
@@ -91,13 +133,13 @@ h1 {
 	text-align:left;
 	outline:none;
 	font-size:18px;
-	background:url(../assets/img/register/lock.png) no-repeat 440px 10px;
+	background: no-repeat 440px 10px;
 	margin-top:4%;
 	font-weight: 300;
 	font-family: 'Muli', sans-serif;
 	border-radius: 4px;
 }
-.register {
+.register, .enterPassword {
 	padding:10px;
 	background-color:#4C9A39;
 	width:78%;

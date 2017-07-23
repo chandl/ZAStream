@@ -1,6 +1,9 @@
-@(isLoggedIn: Boolean, userInfo: User)
+@import assets.constant.Constants
+@(isLoggedIn: Boolean, userInfo: User, streams: List[Channel])
 
 @main("Home", isLoggedIn, userInfo) {
+    <link type="text/css" rel="stylesheet" href="/assets/stylesheets/index.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/stylesheets/featured-streams.css" />
         <header id="first">
             <div class="header-content">
                 <div class="inner">
@@ -8,7 +11,7 @@
                     <h1 class="cursive">Welcome to ZAStream</h1>
 
                     <hr>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas suscipit faucibus scelerisque. Suspendisse posuere risus ut finibus placerat. Nunc ornare vitae ex eget mollis. Sed rhoncus tempus mollis.</p>
+                    <p>We are a new Live Video streaming website built for gamers, teachers, and professionals alike. Our goal is to take the mystery out of live streaming and connect people around the world in collaborative ways.</p>
 
                 </div>
             </div>
@@ -21,16 +24,21 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
-                        <h2 class="margin-top-0 text-primary">Video Streaming</h2>
+                        <h2 class="margin-top-0 text-primary">About Us</h2>
                         <br>
                         <p class="text-faded">
-                            <strong>Streaming</strong> media is multimedia that is constantly received by and presented to an end-user while being delivered by a provider. The verb "to stream" refers to the process of delivering or obtaining media in this manner; the term refers to the delivery method of the medium, rather than the medium itself, and is an alternative to file downloading, a process in which the end-user obtains the entire file for the content before watching or listening to it.
+                            Thanks for checking us out! We are a brand-new streaming service tailored to small communities, educational groups, and professionals. There are two main things to do here - stream and watch live video! Currently, you can get to public streams only via a link provided by a friend/instructor/presenter, but that will be changing soon! If you want to stream, but you have never streamed before, it is surprisingly easy.
                         </p>
-                        <a href="#three" class="btn btn-default btn-xl page-scroll">Learn More</a>
+                        <hr/>
+                        <p class="text-faded">
+                            ZAStream is a collaborative effort made by undergraduate Computer Science students at Southern Oregon University as a senior-year Capstone project. We really appreciate you testing our website and would love any feedback. Please send any comments, questions, or concerns to support&#64;zastream.com and we will get back to you!
+                        </p>
+                        @*<a href="#three" class="btn btn-default btn-xl page-scroll">Learn More</a>*@
                     </div>
                 </div>
             </div>
         </section>
+
 
         <section id="two" class="no-padding">
             <div class="container-fluid">
@@ -39,95 +47,107 @@
                 <hr class="primary">
                 <br/>
                 <div class="row no-gutter">
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream1">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>A Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream2">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>B Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream3">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>C Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
 
+                    @for(stream <- streams){
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <div class="item">
+                                <h3 class="broadcastTitle"><a href="@routes.ChannelController.show(stream.getOwner().getUserName())">@stream.getChannelTitle()</a></h3>
+                                <h4 class="channelName">User: @stream.getOwner.getUserName()</h4>
+                                <hr/>
 
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream4">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>D Streaming Live!</h2>
-                                    </div>
-                                </div>
+                                @if(stream.getChannelType == "PUB"){
+                                    <p class="desc channelType">Type: <span>Public</span></p>
+                                }else{
+                                    <p class="desc channelType">Type: <span>Private</span></p>
+                                }
+
+                                @if(Channel.isStreaming(stream.getOwner.getUserName(), stream.getStreamKey())) {
+                                    <p class="desc live isActive">Status: <span>Live</span></p>
+                                }else{
+                                    <p class="desc notLive isActive">Status: <span>Not Live</span></p>
+
+                                }
+                                <p class="desc totalViews">Total Views: <span>@stream.getTotalViews()</span></p>
+                                <p class="desc currentViews">Current Viewers: <span>@stream.getCurrentViewers()</span></p>
                             </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream5">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>E Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <a class="gallery-box" href="#">
-                            <img src="http://placehold.it/800x450" class="img-responsive" alt="Stream6">
-                            <div class="gallery-box-caption">
-                                <div class="gallery-box-content">
-                                    <div>
-                                        <h2>F Streaming Live!</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                        </div>
+
+                    }
                 </div>
+
+            </div>
+
+            <div class="text-center call-to-action view-more-streams">
+                <a href="@routes.SearchController.searchPage("")" class="btn btn-default btn-lg wow flipInX">View More</a>
             </div>
         </section>
+
+
         <aside class="bg-dark">
+
             <div class="container text-center">
                 <div class="call-to-action">
-                    <h2 class="text-primary">Get Started!</h2>
-                    <a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Broadcaster</a>
-                    <a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>
+                    @if(isLoggedIn){
+                        <h2 class="text-primary">Broadcaster Tutorial:</h2>
+
+                        <p>
+                            As a broadcaster, ZAStream recommends and fully supports the free <a href="https://obsproject.com/" target="_blank"> Open Broadcaster Software </a>to start streaming video from your computer, but there are other streaming solutions available.
+                        </p>
+
+                        <button class="btn btn-default btn-lg wow flipInX" onclick="toggleDocument()">Read More</button>
+
+                        <section id="tutorial" style="display: none;">
+                            <h3 class="title"><strong>Broadcaster Streaming Quick Start Guide</strong></h3>
+                            <p>This quick guide will tell you everything you need to know to start a basic stream on our website using <a href="https://obsproject.com/" target="_blank">"OBS"</a>. Tutorials for other streaming software will be released soon!</p>
+                            <p>Now that you are registered, you can begin to set up your streaming software to stream to our website!</p>
+                            <p>Before beginning, you will need to download and install a streaming software. We recommend using <a href="https://obsproject.com/" target="_blank">"OBS"</a>.</p>
+
+                            <hr/>
+
+                            <h3 class="title"><strong>Steps To Stream: </strong></h3>
+                            <ol>
+
+                                <li>Get your unique stream key from the email that was sent during registration in your mailbox or from your <a href="@routes.ChannelController.show(userInfo.getUserName)" target="_blank">channel dashboard on your channel page</a>.</li>
+                                <li>Open the OBS software and click 'Settings'. </li>
+                                <li>Click the 'Stream' section of the configuration and choose 'Custom Streaming Server' as your Stream Type.</li>
+                                <li>For the URL, enter <code>rtmp://@Constants.HOSTNAME/live</code></li>
+                                <li>For the stream key, enter in the key that you found during step 1.</li>
+                                <li>Click 'OK' and now your streaming software is configured properly!</li>
+                                <li>If this is your first time streaming, you will need to set up Scenes and Sources. For more information on how to do that, check out the OBS documentation <a href="https://obsproject.com/forum/resources/obs-classic-official-overview-guide.6/">here!</a></li>
+                                <li>To actually begin streaming, click the 'Start Streaming' button in OBS. It currently takes around 30 seconds for the stream to show up on your channel page.</li>
+                                <li>Enjoy your stream on your channel page!</li>
+                            </ol>
+                        </section>
+                        @*<a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>*@
+                    }else{
+                        <h2 class="text-primary">Get Started!</h2>
+
+                        <p>
+                            Here at ZAStream, we recommend the free Open Broadcaster Software to stream video from your computer, but there are other solutions available. To get started streaming, register by clicking the “Sign Up” link below and follow the instructions provided in the welcome email to set up your streaming client.
+                        </p>
+                        <a href="@routes.AuthenticationController.registerPage()" class="btn btn-default btn-lg wow flipInX">Sign Up</a>
+                        @*<a href="#" target="ext" class="btn btn-default btn-lg wow flipInX">I am a Viewer</a>*@
+                    }
+
                 </div>
                 <br>
                 <hr/>
                 <br>
-
             </div>
+            <script>
+
+            function toggleDocument() {
+                var x = document.getElementById("tutorial");
+
+                if (x.style.display === 'none') {
+                    x.style.display = 'block';
+                } else {
+                    x.style.display = 'none';
+
+                }
+            }
+            </script>
         </aside>
+
 
 }

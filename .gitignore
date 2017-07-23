@@ -4,6 +4,7 @@ libexec/*
 *.idea/
 *.iml
 
+conf/evolutions/*
 
 # general
 *~
@@ -63,3 +64,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+libexec/
+project/project/
+public/stylesheets/

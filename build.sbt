@@ -1,6 +1,6 @@
 name := """ZAStream"""
 
-version := "1.0-SNAPSHOT"
+version := "2.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
@@ -12,5 +12,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
-  "mysql" % "mysql-connector-java" % "5.1.40"
+  "mysql" % "mysql-connector-java" % "5.1.40",
+  "org.mindrot" % "jbcrypt" % "0.4",
+  "com.typesafe.play" %% "play-mailer" % "5.0.0"
 )

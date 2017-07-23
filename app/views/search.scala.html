@@ -1,0 +1,47 @@
+@(query: String, isLoggedIn: Boolean, userInfo: User, results: List[Channel])
+
+
+@main("Search Results: "+query, isLoggedIn, userInfo) {
+  <link rel='stylesheet' type='text/css' href='/assets/stylesheets/Rstyle.css'>
+  <link rel='stylesheet' type='text/css' href='/assets/stylesheets/search.css'>
+
+  <div class="container search-container">
+      @if(query == ""){
+          <h2>All Channels</h2>
+      }else{
+          @if(results.size() == 0){
+              <h2>No results for '@query'.</h2>
+          }else{
+              <h2>Search results for '@query': </h2>
+          }
+      }
+
+    <div class="row">
+       @for(result <- results){
+           <div class="col-xs-12 col-sm-6 col-md-4">
+               <div class="item">
+                   <h3 class="broadcastTitle"><a href="@routes.ChannelController.show(result.getOwner().getUserName())">@result.getChannelTitle()</a></h3>
+                   <h4 class="channelName">User: @result.getOwner().getUserName()</h4>
+                   <hr/>
+                   @if(result.getChannelType == "PUB"){
+                       <p class="desc channelType">Type: <span>Public</span></p>
+                   }else{
+                       <p class="desc channelType">Type: <span>Private</span></p>
+                   }
+
+                   @if(Channel.isStreaming(result.getOwner.getUserName(), result.getStreamKey())){
+                       <p class="desc live isActive">Status: <span>Live</span></p>
+                   }else{
+                       <p class="desc notLive isActive">Status: <span>Not Live</span></p>
+                   }
+
+                   <p class="desc totalViews">Total Views: <span>@result.getTotalViews()</span></p>
+                   <p class="desc currentViews">Current Viewers: <span>@result.getCurrentViewers()</span></p>
+               </div>
+           </div>
+       }
+
+    </div>
+
+  </div>
+}

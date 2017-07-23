@@ -8,11 +8,11 @@ GET     /                              controllers.HomeController.index
 GET     /public/stylesheets/nav.css                     controllers.Assets.at(path="/public/stylesheets", file="nav.css")
 GET     /public/stylesheets/bootstrap.min.css           controllers.Assets.at(path="/public/stylesheets", file="bootstrap.min.css")
 GET     /public/stylesheets/Rstyle.css                  controllers.Assets.at(path="/public/stylesheets", file="Rstyle.css")
+GET     /assets/big-logo.png                  controllers.Assets.at(path="/public", file="big-logo.png")
 
 GET     /index.html           controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-#GET     /addTestUser            controllers.AuthenticationController.testAddUser
 
 GET     /register               controllers.AuthenticationController.registerPage
 POST    /register               controllers.AuthenticationController.newUser
@@ -20,7 +20,36 @@ POST    /register               controllers.AuthenticationController.newUser
 GET     /login                  controllers.AuthenticationController.loginPage
 POST    /login                  controllers.AuthenticationController.authenticate
 
+GET     /feedback               controllers.FeedbackController.feedbackPage
+POST    /feedback               controllers.FeedbackController.sendFeedBack
+
 GET     /logout                 controllers.AuthenticationController.logout
 
+#Password Recovery:
+GET     /recover-password/      controllers.AccountRecoveryController.recoveryPage
+GET     /recover-password/:recoveryHash controllers.AccountRecoveryController.newPassword(recoveryHash: String)
+POST    /recover-password/       controllers.AccountRecoveryController.sendRecovery
+POST    /recover-password/:recoveryHash controllers.AccountRecoveryController.changePassword(recoveryHash: String)
+
 #View Streams
-GET     /:name           controllers.ChannelController.show(name: String)
+GET     /channelWS.js   controllers.ChannelController.webSocketChannel(name: String)
+GET     /channelWS/:channel  controllers.ChannelController.viewCountInterface(channel: String)
+GET     /reset-streamkey/:channel        controllers.ChannelController.changeStreamKey(channel:String)
+
+#Search
+GET     /search/        controllers.SearchController.searchPage(query: String ?= "")
+GET     /search/:query  controllers.SearchController.searchPage(query)
+
+#Chat Websocket Stuff
+GET     /chat.js        controllers.ChatController.webSocketChannelChat(name: String, userId: Integer)
+GET     /chat/:channel  controllers.ChatController.chatInterface(channel: String)
+
+GET     /gchat          controllers.ChatController.generalChat
+GET     /gchat.js       controllers.ChatController.webSocketGeneralChat(userId: Integer)
+
+#Private Channels
+GET      /private/:name  controllers.ChannelController.showPrivate(name)
+POST     /private/:name  controllers.ChannelController.showPrivate(name)
+
+#Channels
+GET     /:name           controllers.ChannelController.show(name)

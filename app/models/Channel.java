@@ -1,11 +1,22 @@
 package models;
 
 import com.avaje.ebean.Model;
+import play.Logger;
+import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.File;
 import java.util.List;
 
+/**
+ * Channel: Data Model + Helper Methods for Channels
+ *
+ * @author Chandler Severson
+ * @author Yiwei Zheng
+ * @version 2.0
+ * @since 1.0
+ */
 @Entity
 @Table(name="channel")
 public class Channel extends Model{
@@ -24,9 +35,19 @@ public class Channel extends Model{
     @Size(max=3, min=3)
     public String channelType = "PUB";
 
+    @Column(name="channelStatus")
+    public boolean channelStatus = false;
+
+    @Column(name="channelPassword")
+    public String channelPassword;
+
     @Column(name="streamKey")
     @Size(min=16, max=16)
     public String streamKey;
+
+    @Column(name="channelTitle")
+    @Size(min=3, max=64)
+    public String channelTitle;
 
     @OneToOne
     @JoinColumn(name="roomID")
@@ -36,7 +57,14 @@ public class Channel extends Model{
     @JoinColumn(name="userID")
     public User owner;
 
-
+    /**
+     * Create a new Channel
+     *
+     * @param channelType The Type of the {@link Channel} (PUB or PRI)
+     * @param streamKey The Stream key to be associated with the {@link Channel}.
+     * @param chatRoom The {@link ChatRoom} to be associated with the {@link Channel}
+     * @param owner The {@link User} that owns this channel.
+     */
     public Channel(String channelType, String streamKey, ChatRoom chatRoom, User owner) {
         this.channelType = channelType;
         this.streamKey = streamKey;
@@ -44,16 +72,49 @@ public class Channel extends Model{
         this.owner = owner;
         this.currentViewers = 0;
         this.totalViews = 0;
+        this.channelTitle = owner.getUserName();
+        this.channelPassword = null;
+        this.channelStatus = false;
     }
 
+    /**
+     * The {@link com.avaje.ebean.Model.Finder} method to find entries in the DB.
+     */
     public static Finder find = new Finder(Integer.class, Channel.class);
 
+    /**
+     * Checks if a specified Stream key exists.
+     * @param key The stream key to check.
+     * @return true if the stream key exists, otherwise return false
+     */
     public static boolean streamKeyExists(String key){
         List<Channel> channels = find.where().eq("streamKey", key).findList();
 
         return channels.size() > 0;
     }
 
+    public static boolean isStreaming(String channel, String key){
+        File streamFile = new File("/HLS/live/"+key+"/index.m3u8");
+        boolean status = false;
+
+        Channel c = Channel.findChannel(User.findByUsername(channel));
+
+        if(streamFile.exists()){
+            status = true;
+            if(!c.isStreaming()){
+                c.setIsStreaming(true);
+                c.save();
+            }
+        }else if (c.isStreaming()){
+            c.setIsStreaming(false);
+            c.save();
+        }
+
+        return status;
+    }
+
+
+    //====================Getters and Setters====================
     public int getChannelID() {
         return channelID;
     }
@@ -67,7 +128,8 @@ public class Channel extends Model{
     }
 
     public void setCurrentViewers(int currentViewers) {
-        this.currentViewers = currentViewers;
+        if(currentViewers >= 0)
+            this.currentViewers = currentViewers;
     }
 
     public int getTotalViews() {
@@ -110,20 +172,71 @@ public class Channel extends Model{
         this.owner = owner;
     }
 
-    public static Finder getFind() {
-        return find;
+    public String getChannelPassword() {
+        return channelPassword;
     }
 
-    public static void setFind(Finder find) {
-        Channel.find = find;
+    public void setChannelPassword(String channelPassword) {
+        this.channelPassword = channelPassword;
     }
+
+    public boolean isStreaming() {
+        return channelStatus;
+    }
+
+    public void setIsStreaming(boolean channelStatus) {
+        this.channelStatus = channelStatus;
+    }
+
+    //====================END Getters and Setters====================
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Channel: ").append(channelID).append("\n  Viewers: ").append(currentViewers).append("\n  Type: ").append(channelType).append("\n  Key: ").append(streamKey).append("\n  Owner: ").append(owner.toString());
+        sb.append("Channel: ")
+                .append(channelID)
+                .append("\n  Viewers: ")
+                .append(currentViewers)
+                .append("\n  Type: ")
+                .append(channelType)
+                .append("\n  Key: ")
+                .append(streamKey)
+                .append("\n  Owner: ")
+                .append(owner.toString());
 
         return sb.toString();
     }
+
+    public static Channel findChannel(User user){
+        List<Channel> theChannel = find.where().eq("userID", user.userId).findList();
+
+        if(theChannel.size() == 0) {
+//            Logger.debug("No Channel Found for ID: "+ user.userId + ", Name: "+ user.userName);
+            return null;
+        }else{
+//            Logger.debug("Channel Found for ID: "+ user.userId + ", Name: "+ user.userName+", Key: "+theChannel.get(0).getStreamKey());
+            return theChannel.get(0);
+        }
+    }
+
+    public static List<Channel> findChannels(String query){
+        List<Channel> channels = find.where().like("channelTitle", "%"+query+"%").findList();
+
+        return channels;
+    }
+
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+
+    public void setChannelTitle(String channelTitle) {
+        this.channelTitle = channelTitle;
+    }
+
+    public boolean isPublic(){
+        return channelType.equals("PUB");
+    }
+
+
 }
